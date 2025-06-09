@@ -1,0 +1,440 @@
+{# templates/kontact.html #}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Kontakt | EscapeFromTrebesin
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ========================= SPECIFICKÉ STYLY PRO STRÁNKU KONTAKT ========================= */
+
+  /* Section wrappers */
+  .section-container {
+    padding: 20px;
+    margin-bottom: 80px;
+  }
+  /* První sekce: pouze spodní linka */
+  .section-container:nth-of-type(1) {
+    border-bottom: 3px solid #e63946;
+    border-radius: 10px 10px 10px 10px;
+
+
+  }
+  /* Druhá sekce: horní i spodní linka */
+  .section-container:nth-of-type(2) {
+    border-top: 3px solid #e63946;
+    border-bottom: 3px solid #e63946;
+    border-radius: 10px 10px 10px 10px;
+
+
+  }
+  /* Třetí sekce: pouze horní linka */
+  .section-container:nth-of-type(3) {
+    border-top: 3px solid #e63946;
+    border-radius: 10px 10px 10px 10px;
+
+  }
+
+  /* ========================= KONTAKTNÍ MŘÍŽKA & KARTY ========================= */
+  /* Pro první sekci rozdělíme na dvě části (podobně jako u about-grid) */
+  .contact-main-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  /* Každá karta v první sekci má fixní výšku 540px */
+  .contact-main-grid .contact-card {
+    height: 540px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* aby se centrálně vyrovnal text nebo obrázek */
+    align-items: center;
+  }
+
+  /* Pro ostatní sekce ponecháme .contact-grid */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  /* Obecný styl kartiček (podobný about-card) */
+  .contact-card,
+  .branch-card {
+    background: linear-gradient(135deg, #131313 0%, #0a0a0a 100%);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+  }
+  /* Pseudo-element pro efekt osvětlení */
+  .contact-card::before,
+  .branch-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(230,57,70,0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .contact-card::before,
+  .branch-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(230,57,70,0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  
+    /* aby pseudo-element neblokoval kliknutí */
+    pointer-events: none;
+  }
+  /* Podobně jako u .about-card:hover */
+  .contact-card:hover::before,
+  .branch-card:hover::before {
+    opacity: 1;
+  }
+  .contact-card:hover,
+  .branch-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(230,57,70,0.3);
+    background: linear-gradient(135deg, rgba(19,19,19,0.9) 0%, rgba(230,57,70,0.2) 100%);
+  }
+
+  .contact-card h2,
+  .contact-card h3,
+  .branch-info h3 {
+    margin-bottom: 20px;
+    color: #e63946;
+    text-align: center;
+  }
+  .contact-card p,
+  .branch-info p {
+    line-height: 1.7;
+    margin-bottom: 15px;
+    color: #f0f0f0;
+    text-align: center;
+  }
+  .contact-card a,
+  .branch-info a {
+    color: #e63946;
+    transition: color 0.3s;
+  }
+  .contact-card a:hover,
+  .branch-info a:hover {
+    color: #c1121f;
+  }
+
+  /* Centrum obsahu uvnitř karet */
+  .contact-card img,
+  .branch-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    transition: transform 0.3s ease;
+  }
+  .contact-card:hover img,
+  .branch-card:hover img {
+    transform: scale(1.05);
+  }
+
+  .branches {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+  }
+  
+  /* Make each branch card a two‐column grid so both columns always match the card’s width */
+  .branch-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* exactly half-and-half */
+    background: linear-gradient(135deg, #131313 0%, #0a0a0a 100%);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  .branch-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(230, 57, 70, 0.3);
+    background: linear-gradient(135deg, rgba(19, 19, 19, 0.9) 0%, rgba(230, 57, 70, 0.2) 100%);
+  }
+  
+  /* Remove the old flex rules—this grid cell will now automatically be 50% of .branch-card */
+  .map-placeholder {
+    width: 100%;
+    height: 250px; /* keep a fixed height, or change as needed */
+    background-color: #1c1c1c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Ensure the <img> inside fills its grid cell completely */
+  .map-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .map-placeholder img:hover {
+    transform: scale(1.05);
+  }
+  
+  /* The info panel should also fill exactly 50% of the card */
+  .branch-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* vertically center text if you like */
+  }
+  
+  /* Keep text styling unchanged */
+  .branch-info h3 {
+    margin-bottom: 20px;
+    color: #e63946;
+    text-align: center;
+  }
+  .branch-info p {
+    margin-bottom: 10px;
+    color: #f0f0f0;
+    text-align: center;
+  }
+  .branch-info a {
+    color: #e63946;
+    transition: color 0.3s;
+  }
+  .branch-info a:hover {
+    color: #c1121f;
+  }
+
+  /* ========================= Přizpůsobení odkazů v patičce ========================= */
+  .footer-links a {
+    color: #f0f0f0;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .footer-links a:hover {
+    color: #e63946;
+  }
+
+  /* ========================= Responsivita ========================= */
+  @media (max-width: 768px) {
+    .contact-main-grid,
+    .contact-grid {
+      gap: 20px;
+    }
+    .branches {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .menu {
+      flex-direction: column;
+      gap: 10px;
+    }
+    .menu li {
+      margin-left: 0;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+  <!-- ====================================================== -->
+  <!--       STRÁNKA: Kontakt (rozložené do „sekcí“)        -->
+  <!-- ====================================================== -->
+
+  <div class="hidden">
+    <h1>Kontakt | EscapeFromTrebesin</h1>
+  </div>
+
+  <section>
+    <div class="container">
+
+      <!-- ===== Sekce 1: Obecné dotazy + blok se 2 částmi (text / obrázek) ===== -->
+      <div class="section-container">
+        <div class="contact-main-grid">
+          <!-- Část 1: Text s kontaktními údaji -->
+          <div class="contact-card">
+            <h2>Obecné dotazy</h2>
+            <p>
+              Rádi Vám odpovíme na e-mailu
+              <a href="mailto:info@escapefromtrebesin.cz">info@escapefromtrebesin.cz</a>.
+            </p>
+            <p>
+              Jsme k zastižení ve všední dny od
+              <strong>9:00</strong> do <strong>16:00</strong> hodin.
+            </p>
+            <p>
+              V tuto dobu je Vám také k dispozici náš
+              <strong>Front Office</strong> na adrese
+              <strong>Na Třebešíně 2299, Praha 10</strong>.
+            </p>
+
+            <button class="btn" onclick="location.href='{% url 'about' %}'">
+              Časté kladené dotazy
+            </button>
+
+            <p style="margin-top: 30px;">
+              Pro rezervace máme otevřeno <strong>každý den, celý den</strong> 🙂.
+              <a href="{% url 'booking' %}" class="important-text-info">Rezervujte online</a>.
+            </p>
+            <p>
+              V případě dotazů, které nelze řešit e-mailem, volejte na
+              <a href="tel:+420123456789">+420 123 456 789</a>
+              (primárně všední dny 9:00–16:00 h).
+            </p>
+          </div>
+
+          <!-- Část 2: Obrázek recepce vystředěný uvnitř karty -->
+          <div class="contact-card">
+            <img
+              src="{% static 'img/reception.png' %}"
+              alt="Recepce EscapeFromTrebesin"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Sekce 2: Kontakty na klíčové osoby ===== -->
+      <div class="section-container">
+        <h2>Kontakty na nás</h2>
+        <div class="contact-grid">
+          <!-- CEO -->
+          <div class="contact-card">
+            <h3>Obchodní nabídky, spolupráce</h3>
+            <p><strong>Volodymyr Siniaev (CEO)</strong></p>
+            <p>
+              E-mail:
+              <a href="mailto:manager@escapefromtrebesin.cz">
+                manager@escapefromtrebesin.cz
+              </a>
+            </p>
+          </div>
+
+          <!-- Front Office -->
+          <div class="contact-card">
+            <h3>Obecné dotazy – rezervace</h3>
+            <p><strong>Front Office</strong></p>
+            <p>
+              E-mail:
+              <a href="mailto:info@escapefromtrebesin.cz">info@escapefromtrebesin.cz</a>
+            </p>
+          </div>
+
+          <!-- CPO -->
+          <div class="contact-card">
+            <h3>Firemní klienti, teambuilding</h3>
+            <p><strong>Maksym Polyvoda (CPO)</strong></p>
+            <p>
+              E-mail:
+              <a href="mailto:tb@escapefromtrebesin.cz">tb@escapefromtrebesin.cz</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Sekce 3: Naše pobočky ===== -->
+      <div class="section-container">
+        <h2>Naše pobočky</h2>
+        <div class="branches">
+          <!-- Pobočka Petrské -->
+          <div class="branch-card">
+            <div class="map-placeholder">
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Stra%C5%A1nice+2279,+Praha+10"
+                target="_blank"
+              >
+                <img
+                  src="{% static 'img/mapa1.png' %}"
+                  alt="Mapa pobočky Trebesin"
+                />
+              </a>
+            </div>
+            <div class="branch-info">
+              <h3>Pobočka Třebešín</h3>
+              <p><strong>Hry:</strong> Vězení Alcatraz, Egyptská hrobka</p>
+              <p><strong>Adresa:</strong> Strašnice 2279, Praha 10</p>
+              <p>
+                <strong>Telefon:</strong>
+                <a href="tel:+420608867936">+420 608 867 936</a>
+              </p>
+            </div>
+          </div>
+
+          <!-- Pobočka Anděl -->
+          <div class="branch-card">
+            <div class="map-placeholder">
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Staropramenn%C3%A1+530%2F12,+Praha+5,+And%C4%9Bl"
+                target="_blank"
+              >
+                <img
+                  src="{% static 'img/mapa2.png' %}"
+                  alt="Mapa pobočky Anděl"
+                />
+              </a>
+            </div>
+            <div class="branch-info">
+              <h3>Pobočka Anděl</h3>
+              <p><strong>Hry:</strong> Laboratoř šíleného vědce</p>
+              <p><strong>Adresa:</strong> Staropramenná 530/12, Praha 5 – Anděl</p>
+              <p>
+                <strong>Telefon:</strong>
+                <a href="tel:+420777791112">+420 777 791 112</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // -----------------------------
+  //  Scroll‐based Fade‐In Animation
+  // -----------------------------
+  document.addEventListener('DOMContentLoaded', function() {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    // Nastavíme počáteční stav na všechny sekční kontejnery a karty
+    document.querySelectorAll('.section-container, .contact-card, .branch-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+  });
+</script>
+{% endblock %}

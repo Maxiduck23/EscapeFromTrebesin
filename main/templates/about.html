@@ -1,0 +1,571 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}O nás | EscapeFromTrebesin{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ========================= ABOUT PAGE SPECIFIC STYLES ========================= */
+  
+  /* Quote and Mission Text as Smaller Citations */
+  .quote-text {
+    font-size: 1.3rem;
+    font-style: italic;
+    font-weight: 300;
+    text-align: center;
+    margin: 0 auto 30px; /* Reduced from 40px */
+    max-width: 100%; /* Changed to full width */
+    color: #b8b8b8;
+    position: relative;
+    padding: 20px 50px;
+    line-height: 1.8;
+    animation: fadeInUp 1s ease-out;
+    border-left: 3px solid #e63946;
+    background: rgba(230, 57, 70, 0.03);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 0 8px 8px 0;
+  }
+  
+  .quote-text::before,
+  .quote-text::after {
+    content: '"';
+    font-size: 2.5rem;
+    position: absolute;
+    color: #e63946;
+    opacity: 0.3;
+    font-family: Georgia, serif;
+  }
+  
+  .quote-text::before {
+    top: -10px;
+    left: 10px;
+  }
+  
+  .quote-text::after {
+    bottom: -25px;
+    right: 10px;
+  }
+  
+  /* Interactive Mission Text */
+  .mission-text {
+    font-size: 1.4rem;
+    text-align: center;
+    font-weight: 400;
+    font-style: italic;
+    margin: 30px auto 20px; /* Reduced top and bottom margins */
+    max-width: 800px; /* Adjusted to be slightly wider */
+    color: #f0f0f0;
+    position: relative;
+    padding: 25px 40px;
+    line-height: 1.7;
+    animation: fadeInUp 1s ease-out 0.2s both;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, rgba(19, 19, 19, 0.8) 100%);
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  .mission-text::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+  }
+  
+  .mission-text:hover::before {
+    left: 100%;
+  }
+  
+  .mission-text:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(230, 57, 70, 0.4);
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.2) 0%, rgba(19, 19, 19, 0.9) 100%);
+  }
+  
+  .mission-text:active {
+    transform: translateY(-2px) scale(1.01);
+  }
+  
+  /* Hover effects for citations */
+  .quote-text:hover {
+    background: rgba(230, 57, 70, 0.06);
+    border-left-width: 5px;
+    transition: all 0.3s ease;
+    transform: translateX(5px);
+  }
+  
+  .citation-author {
+    display: block;
+    font-size: 0.9rem;
+    font-style: normal;
+    margin-top: 10px;
+    color: #e63946;
+    opacity: 0.8;
+  }
+  
+  /* About Grid with Equal Heights */
+  .about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px; /* Reduced from 40px */
+    align-items: stretch;
+    margin-bottom: 40px; /* Reduced from 60px */
+  }
+  
+  .about-card {
+    background: linear-gradient(135deg, #131313 0%, #0a0a0a 100%);
+    padding: 50px; /* Increased padding for 720px height */
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    min-height: 540px; /* Set to requested height */
+    height: 540px; /* Fixed height */
+  }
+  
+  .about-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(230, 57, 70, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .about-card:hover::before {
+    opacity: 1;
+  }
+  
+  .about-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(230, 57, 70, 0.3);
+  }
+  
+  /* Text card specific styles */
+  .about-card.text-card {
+    justify-content: center; /* Center content vertically */
+    padding: 60px 40px; /* Increased padding for better spacing */
+  }
+  
+  .about-card p {
+    line-height: 1.8; /* Increased back for better readability with more height */
+    margin-bottom: 25px; /* Increased spacing between paragraphs */
+    font-size: 1.1rem; /* Slightly larger text */
+    position: relative;
+    z-index: 1;
+  }
+  
+  .about-card p:first-child {
+    font-size: 1.25rem; /* Larger first paragraph */
+    font-weight: 500;
+    color: #e63946;
+    margin-bottom: 30px; /* More space after first paragraph */
+  }
+  
+  .about-card p:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* Image card specific styles */
+  .about-card.image-card {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 540px; /* Match the card height */
+    height: 540px; /* Fixed height */
+  }
+  
+  .about-card img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: none; /* Remove max-height limit */
+    object-fit: cover;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+  }
+  
+  .about-card:hover img {
+    transform: scale(1.05);
+  }
+  
+  /* FAQ Section with Enhanced Design */
+  .faq-section {
+    background: linear-gradient(180deg, #0a0a0a 0%, #131313 100%);
+    padding: 80px 0;
+    position: relative;
+  }
+  
+  .faq-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e63946, transparent);
+  }
+  
+  .faq-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .faq-title {
+    text-align: center;
+    margin-bottom: 50px;
+    position: relative;
+  }
+  
+  .faq-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: #e63946;
+  }
+  
+  .accordion {
+    background: linear-gradient(135deg, #1c1c1c 0%, #131313 100%);
+    color: #f0f0f0;
+    cursor: pointer;
+    padding: 20px 25px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .accordion::after {
+    content: '+';
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .accordion.active::after {
+    content: '−';
+    transform: translateY(-50%) rotate(180deg);
+  }
+  
+  .accordion:hover,
+  .accordion.active {
+    background: linear-gradient(135deg, #e63946 0%, #c1121f 100%);
+    transform: translateX(5px);
+    box-shadow: 0 5px 20px rgba(230, 57, 70, 0.4);
+  }
+  
+  .panel {
+    max-height: 0;
+    overflow: hidden;
+    background-color: #1c1c1c;
+    margin: -10px 0 15px 20px;
+    border-left: 3px solid #e63946;
+    border-radius: 0 10px 10px 0;
+    transition: all 0.4s ease;
+    opacity: 0;
+  }
+  
+  .panel.open {
+    max-height: 500px;
+    padding: 20px 25px;
+    opacity: 1;
+    box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .panel p {
+    line-height: 1.7;
+    font-size: 1rem;
+    color: #f0f0f0;
+  }
+  
+  /* Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Section Dividers */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e63946, transparent);
+    margin: 40px 0; /* Reduced from 60px */
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .quote-text {
+      font-size: 1.1rem;
+      padding: 15px 30px;
+    }
+    
+    .quote-text::before,
+    .quote-text::after {
+      font-size: 2rem;
+    }
+    
+    .mission-text {
+      font-size: 1.2rem;
+      padding: 20px 25px;
+    }
+    
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    
+    .about-card {
+      min-height: auto;
+      height: auto; /* Allow height to be flexible on mobile */
+    }
+    
+    .about-card.image-card {
+      min-height: 400px; /* Reasonable height for mobile */
+      height: 400px;
+    }
+    
+    .accordion {
+      font-size: 1rem;
+      padding: 15px 20px;
+    }
+    
+    .accordion::after {
+      right: 15px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Co vlastně děláme?</h1>
+</div>
+
+<!-- About Section -->
+<section>
+  <div class="container">
+    <p class="quote-text">
+      Když konečně odhalili, co tajemné symboly znamenají, pootočili dle nich obrazem na
+      stěně a v rohu se otevřel tajný průchod. Mihotající světlo louče rázem odhaluje úzkou
+      chodbu vedoucí neznámo kam…
+    </p>
+
+    <div class="about-grid">
+      <div class="about-card text-card">
+        <p>
+          Zní Vám to jako úryvek z dobrodružného filmu? Přesně takové zážitky nabízíme naživo.
+        </p>
+        <p>
+          V každé z našich her se v týmu 2–6 spoluhráčů ocitnete v tematických prostorách
+          navržených filmovým architektem tak, aby vše působilo zcela autenticky a aby samotná
+          přítomnost zde byla zážitkem.
+        </p>
+        <p>
+          Tyto prostory jsou plné skrytých indicií, zvláštních předmětů a tajných dveří. Máte 60
+          minut na to, abyste pomocí svého důvtipu a týmové spolupráce odhalili vše, co má být
+          odhaleno, a přitom se posouvali dále v napínavém příběhu.
+        </p>
+        <p>
+          Naše hry totiž nejsou zdaleka jen o řešení hádanek, ale o komplexním audiovizuálním
+          zážitku.
+        </p>
+      </div>
+      <div class="about-card image-card">
+        <img
+          src="{% static 'img/example.png' %}"
+          alt="Pohádkový interiér únikové místnosti"
+        />
+      </div>
+    </div>
+
+    <p class="mission-text" id="missionText">
+      Naším posláním je poskytnout hráčům příležitost zažít to, co bylo dosud možné jen v knihách,
+      filmech či videohrách.
+      <span class="citation-author">Escape from Třebešín</span>
+    </p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FAQ Section -->
+<section class="faq-section">
+  <div class="container">
+    <h2 class="faq-title">ČASTO KLADENÉ OTÁZKY</h2>
+    <div class="faq-container">
+      <button class="accordion">
+        V jaký čas se máme dostavit na hru? Máme přijít dřív?
+      </button>
+      <div class="panel">
+        <p>
+          Prosíme, přijďte přesně v čas Vaší rezervace. Před tímto časem se Váš roommaster stále
+          věnuje přípravě hry po předchozím týmu.
+        </p>
+      </div>
+
+      <button class="accordion">
+        Přijde nás méně/více, než jsme uvedli v rezervaci. Je to problém?
+      </button>
+      <div class="panel">
+        <p>Žádný problém! Cenu rezervace je možné upravit na místě dle reálného počtu hráčů.</p>
+      </div>
+
+      <button class="accordion">
+        Můžeme přijít na hru v počtu větším než 6 hráčů?
+      </button>
+      <div class="panel">
+        <p>
+          Maximální počet hráčů je 6. Ideální počet hráčů je pro většinu našich her 2–4. Vyšší
+          počet hráčů než 6 není možný z důvodu herního designu.
+        </p>
+      </div>
+
+      <button class="accordion">
+        Máte hry, které nejsou strašidelné / jsou vhodné i pro rodinu?
+      </button>
+      <div class="panel">
+        <p>
+          Ano, nabízíme i rodinné scénáře s menším důrazem na strašidelné prvky. Pro více informací
+          navštivte stránku "Naše místnosti".
+        </p>
+      </div>
+
+      <button class="accordion">Mohou k vám děti bez doprovodu dospělého?</button>
+      <div class="panel">
+        <p>
+          Děti mladší 15 let se mohou účastnit pouze v doprovodu dospělé osoby. Prosím berte na
+          vědomí, že některé scénáře mohou být složitější.
+        </p>
+      </div>
+
+      <button class="accordion">
+        Jak jsou hry náročné? Máme mít obavy, že si zážitek neužijeme, když nám to nebude „myslet"?
+      </button>
+      <div class="panel">
+        <p>
+          Hry nejsou jednoduché (co by to pak bylo za zábavu!), ale v případě obtíží máme
+          připravený důmyslný systém nápověd, které postupně dovedou k cíli každého, aniž byste
+          byli vedeni, jak se říká, „za ručičku". Záleží jen na Vás, jak moc budete chtít být
+          samostatní. A hlavně – v našich hrách jde o velmi specifický typ „fištróna", o kterém
+          možná ani nevíte, že ho máte. Nejsme Mensa, neděláme šifry ani sudoku. Hrajeme si
+          spíše se selským rozumem a souvislostmi.
+        </p>
+      </div>
+
+      <button class="accordion">
+        Jsou zapotřebí nějaké specifické znalosti či schopnosti?
+      </button>
+      <div class="panel">
+        <p>
+          Rozhodně ne! U nás se nemusíte bát žádného dějepisu, matematiky, logických rovnic ani
+          složitých šifer. Postačí Vám jen a pouze selský rozum, schopnost dávat si věci do
+          souvislostí a občas přemýšlet „out of the box".
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Enhanced Accordion Functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const accordions = document.getElementsByClassName('accordion');
+    
+    for (let i = 0; i < accordions.length; i++) {
+      accordions[i].addEventListener('click', function() {
+        // Close all other accordions
+        for (let j = 0; j < accordions.length; j++) {
+          if (accordions[j] !== this) {
+            accordions[j].classList.remove('active');
+            accordions[j].nextElementSibling.classList.remove('open');
+          }
+        }
+        
+        // Toggle current accordion
+        this.classList.toggle('active');
+        const panel = this.nextElementSibling;
+        panel.classList.toggle('open');
+      });
+    }
+    
+    // Add animation on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+    
+    // Observe elements for scroll animations
+    document.querySelectorAll('.about-card, .accordion').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+    
+    // Interactive mission text
+    const missionText = document.getElementById('missionText');
+    if (missionText) {
+      missionText.addEventListener('click', function() {
+        this.style.animation = 'none';
+        setTimeout(() => {
+          this.style.animation = 'pulse 0.6s ease';
+        }, 10);
+      });
+    }
+  });
+  
+  // Pulse animation for mission text
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+  `;
+  document.head.appendChild(style);
+</script>
+{% endblock %}

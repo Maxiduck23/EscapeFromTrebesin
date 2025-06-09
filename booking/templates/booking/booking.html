@@ -1,0 +1,1209 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Rezervace | Escape From Třebešín{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ========================= BOOKING PAGE SPECIFIC STYLES ========================= */
+    
+    .booking-page {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        min-height: 100vh;
+        padding: 60px 0;
+    }
+    
+    .booking-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .booking-header {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+    
+    .booking-header h1 {
+        color: #e63946;
+        margin-bottom: 20px;
+        animation: fadeInUp 0.8s ease-out;
+    }
+    
+    .booking-header p {
+        font-size: 1.2rem;
+        color: #ccc;
+        animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+    
+    /* Booking Form Container */
+    .booking-form-container {
+        background: linear-gradient(145deg, #131313, #1a1a1a);
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(230, 57, 70, 0.2);
+        overflow: hidden;
+        animation: fadeInUp 0.8s ease-out 0.4s both;
+    }
+    
+    /* Progress Bar */
+    .booking-progress {
+        background: #0a0a0a;
+        padding: 30px 40px;
+        border-bottom: 1px solid rgba(230, 57, 70, 0.2);
+    }
+    
+    .progress-steps {
+        display: flex;
+        justify-content: space-between;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .progress-step {
+        flex: 1;
+        text-align: center;
+        position: relative;
+    }
+    
+    .progress-step:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        width: 100%;
+        height: 2px;
+        background: #333;
+        z-index: 1;
+    }
+    
+    .progress-step.active::after {
+        background: #e63946;
+    }
+    
+    .step-number {
+        width: 40px;
+        height: 40px;
+        background: #333;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 10px;
+        font-weight: bold;
+        position: relative;
+        z-index: 2;
+        transition: all 0.3s ease;
+    }
+    
+    .progress-step.active .step-number,
+    .progress-step.completed .step-number {
+        background: #e63946;
+        color: #fff;
+        box-shadow: 0 0 20px rgba(230, 57, 70, 0.5);
+    }
+    
+    .progress-step.completed .step-number::after {
+        content: '✓';
+        position: absolute;
+        font-size: 1.2rem;
+    }
+    
+    .progress-step.completed .step-number span {
+        display: none;
+    }
+    
+    .step-label {
+        font-size: 0.9rem;
+        color: #777;
+        transition: color 0.3s ease;
+    }
+    
+    .progress-step.active .step-label,
+    .progress-step.completed .step-label {
+        color: #f0f0f0;
+    }
+    
+    /* Booking Content */
+    .booking-content {
+        padding: 50px;
+        position: relative;
+    }
+    
+    /* Step 1: Room Selection */
+    .room-selection {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+    
+    .room-option {
+        background: rgba(230, 57, 70, 0.05);
+        border: 2px solid transparent;
+        border-radius: 15px;
+        padding: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .room-option:hover {
+        border-color: rgba(230, 57, 70, 0.3);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .room-option.selected {
+        border-color: #e63946;
+        background: rgba(230, 57, 70, 0.1);
+        box-shadow: 0 0 30px rgba(230, 57, 70, 0.3);
+    }
+    
+    .room-option.selected::after {
+        content: '✓';
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 30px;
+        height: 30px;
+        background: #e63946;
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        animation: scaleIn 0.3s ease;
+    }
+    
+    .room-image {
+        height: 150px;
+        background-size: cover;
+        background-position: center;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .room-name {
+        font-size: 1.3rem;
+        color: #e63946;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+    
+    .room-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .room-difficulty {
+        display: flex;
+        gap: 3px;
+    }
+    
+    .difficulty-dot {
+        width: 8px;
+        height: 8px;
+        background: #333;
+        border-radius: 50%;
+    }
+    
+    .difficulty-dot.active {
+        background: #e63946;
+    }
+    
+    .room-price {
+        font-size: 1.2rem;
+        color: #f0f0f0;
+        font-weight: bold;
+    }
+    
+    .room-features {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .room-feature {
+        font-size: 0.85rem;
+        color: #999;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    /* Step 2: Date Selection */
+    .date-selection {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 40px;
+    }
+    
+    .calendar-container {
+        background: rgba(230, 57, 70, 0.05);
+        border-radius: 15px;
+        padding: 30px;
+        border: 1px solid rgba(230, 57, 70, 0.2);
+    }
+    
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .calendar-title {
+        font-size: 1.3rem;
+        color: #e63946;
+        font-weight: bold;
+    }
+    
+    .calendar-nav {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .calendar-nav button {
+        background: rgba(230, 57, 70, 0.2);
+        color: #e63946;
+        border: none;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1.2rem;
+    }
+    
+    .calendar-nav button:hover {
+        background: #e63946;
+        color: #fff;
+    }
+    
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+    }
+    
+    .day-label {
+        text-align: center;
+        font-weight: bold;
+        color: #777;
+        font-size: 0.9rem;
+        padding: 10px 0;
+    }
+    
+    .calendar-day {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        position: relative;
+    }
+    
+    .calendar-day:hover:not(.disabled) {
+        background: rgba(230, 57, 70, 0.2);
+        transform: scale(1.1);
+    }
+    
+    .calendar-day.selected {
+        background: #e63946;
+        color: #fff;
+        box-shadow: 0 0 20px rgba(230, 57, 70, 0.5);
+    }
+    
+    .calendar-day.disabled {
+        color: #444;
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+    
+    .calendar-day.today {
+        border: 2px solid #e63946;
+    }
+    
+    /* Time Slots */
+    .time-slots-container {
+        background: rgba(230, 57, 70, 0.05);
+        border-radius: 15px;
+        padding: 30px;
+        border: 1px solid rgba(230, 57, 70, 0.2);
+    }
+    
+    .time-slots-header {
+        font-size: 1.3rem;
+        color: #e63946;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+    
+    .time-slots-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+    
+    .time-slot {
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid transparent;
+        border-radius: 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+    
+    .time-slot:hover:not(.disabled) {
+        border-color: rgba(230, 57, 70, 0.5);
+        background: rgba(230, 57, 70, 0.1);
+        transform: translateY(-3px);
+    }
+    
+    .time-slot.selected {
+        background: #e63946;
+        color: #fff;
+        border-color: #e63946;
+        box-shadow: 0 5px 20px rgba(230, 57, 70, 0.4);
+    }
+    
+    .time-slot.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        text-decoration: line-through;
+    }
+    
+    /* Step 3: Personal Information */
+    .personal-info-form {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 10px;
+        color: #f0f0f0;
+        font-weight: 500;
+    }
+    
+    .form-group label span {
+        color: #e63946;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(230, 57, 70, 0.2);
+        border-radius: 10px;
+        color: #f0f0f0;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #e63946;
+        background: rgba(230, 57, 70, 0.05);
+        box-shadow: 0 0 20px rgba(230, 57, 70, 0.2);
+    }
+    
+    .form-control::placeholder {
+        color: #777;
+    }
+    
+    /* Fix select options contrast */
+    #players {
+        background: #fff;
+        color: #000;
+    }
+    #players option {
+        background: #fff;
+        color: #000;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    
+    .form-note {
+        background: rgba(230, 57, 70, 0.1);
+        border-left: 4px solid #e63946;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 30px;
+        color: #ccc;
+        font-size: 0.95rem;
+    }
+    
+    /* Summary Section */
+    .booking-summary {
+        background: linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, rgba(19, 19, 19, 0.8) 100%);
+        border-radius: 15px;
+        padding: 30px;
+        margin-top: 40px;
+        border: 1px solid rgba(230, 57, 70, 0.3);
+    }
+    
+    .summary-title {
+        font-size: 1.5rem;
+        color: #e63946;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(230, 57, 70, 0.2);
+    }
+    
+    .summary-item:last-child {
+        border-bottom: none;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #e63946;
+    }
+    
+    .summary-label {
+        color: #ccc;
+    }
+    
+    .summary-value {
+        color: #f0f0f0;
+        font-weight: 500;
+    }
+    
+    /* Navigation Buttons */
+    .booking-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    
+    .nav-btn {
+        padding: 15px 40px;
+        border-radius: 50px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1.1rem;
+    }
+    
+    .btn-back {
+        background: transparent;
+        color: #e63946;
+        border: 2px solid #e63946;
+    }
+    
+    .btn-back:hover {
+        background: rgba(230, 57, 70, 0.1);
+        transform: translateY(-3px);
+    }
+    
+    .btn-next {
+        background: linear-gradient(45deg, #e63946, #c1121f);
+        color: #fff;
+        box-shadow: 0 5px 20px rgba(230, 57, 70, 0.3);
+    }
+    
+    .btn-next:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(230, 57, 70, 0.5);
+    }
+    
+    .btn-next:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    /* Success Message */
+    .booking-success {
+        text-align: center;
+        padding: 60px;
+    }
+    
+    .success-icon {
+        font-size: 5rem;
+        color: #2ecc71;
+        margin-bottom: 30px;
+        animation: scaleIn 0.5s ease;
+    }
+    
+    .success-message {
+        font-size: 2rem;
+        color: #f0f0f0;
+        margin-bottom: 20px;
+    }
+    
+    .success-details {
+        font-size: 1.1rem;
+        color: #ccc;
+        margin-bottom: 40px;
+        line-height: 1.8;
+    }
+    
+    .success-code {
+        background: rgba(46, 204, 113, 0.1);
+        border: 2px solid #2ecc71;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 1.5rem;
+        color: #2ecc71;
+        font-weight: bold;
+        letter-spacing: 2px;
+        margin-bottom: 40px;
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes scaleIn {
+        from {
+            transform: scale(0);
+        }
+        to {
+            transform: scale(1);
+        }
+    }
+    
+    /* Loading State */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+    
+    .loading-overlay.active {
+        display: flex;
+    }
+    
+    .loading-spinner {
+        width: 60px;
+        height: 60px;
+        border: 3px solid #333;
+        border-top-color: #e63946;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .booking-content {
+            padding: 30px 20px;
+        }
+        
+        .room-selection {
+            grid-template-columns: 1fr;
+        }
+        
+        .date-selection {
+            grid-template-columns: 1fr;
+        }
+        
+        .time-slots-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+        
+        .progress-step .step-label {
+            font-size: 0.8rem;
+        }
+        
+        .booking-navigation {
+            flex-direction: column;
+        }
+        
+        .btn-back {
+            order: 2;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="booking-page">
+    <div class="booking-container">
+        <div class="booking-header">
+            <h1>Rezervace únikové hry</h1>
+            <p>Vyberte si místnost, datum a čas pro váš nezapomenutelný zážitek</p>
+        </div>
+        
+        <div class="booking-form-container">
+            <!-- Progress Bar -->
+            <div class="booking-progress">
+                <div class="progress-steps">
+                    <div class="progress-step active" id="step-1">
+                        <div class="step-number"><span>1</span></div>
+                        <div class="step-label">Výběr místnosti</div>
+                    </div>
+                    <div class="progress-step" id="step-2">
+                        <div class="step-number"><span>2</span></div>
+                        <div class="step-label">Datum a čas</div>
+                    </div>
+                    <div class="progress-step" id="step-3">
+                        <div class="step-number"><span>3</span></div>
+                        <div class="step-label">Osobní údaje</div>
+                    </div>
+                    <div class="progress-step" id="step-4">
+                        <div class="step-number"><span>4</span></div>
+                        <div class="step-label">Potvrzení</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Booking Content -->
+            <div class="booking-content">
+                <!-- Step 1: Room Selection -->
+                <div class="booking-step" id="booking-step-1">
+                    <h2>Vyberte si místnost</h2>
+                    <div class="room-selection">
+                        <div class="room-option" data-room="tomb" data-price="1200">
+                            <div class="room-image" style="background-image: url('{% static "img/tomb.jpg" %}');"></div>
+                            <h3 class="room-name">Egyptská hrobka</h3>
+                            <div class="room-info">
+                                <div class="room-difficulty">
+                                    <div class="difficulty-dot active"></div>
+                                    <div class="difficulty-dot active"></div>
+                                    <div class="difficulty-dot active"></div>
+                                    <div class="difficulty-dot"></div>
+                                    <div class="difficulty-dot"></div>
+                                </div>
+                                <div class="room-price">1200 Kč</div>
+                            </div>
+                            <div class="room-features">
+                                <div class="room-feature">👥 2-6 hráčů</div>
+                                <div class="room-feature">⏱️ 60 minut</div>
+                                <div class="room-feature">🎯 Střední</div>
+                            </div>
+                        </div>
+                        
+                        <div class="room-option" data-room="lab" data-price="1400">
+                            <div class="room-image" style="background-image: url('{% static "img/lab.png" %}');"></div>
+                            <h3 class="room-name">Laboratoř šíleného vědce</h3>
+                            <div class="room-info">
+                                <div class="room-difficulty">
+                                    <div class="difficulty-dot active"></div>
+                                    <div class="difficulty-dot active"></div>
+                                    <div class="difficulty-dot active"></div>
+                                    <div class="difficulty-dot active"></div>
+                                    <div class="difficulty-dot"></div>
+                                </div>
+                                <div class="room-price">1400 Kč</div>
+                            </div>
+                            <div class="room-features">
+                                <div class="room-feature">👥 2-5 hráčů</div>
+                                <div class="room-feature">⏱️ 60 minut</div>
+                                <div class="room-feature">🎯 Náročná</div>
+                            </div>
+                        </div>
+                        
+                        <div class="room-option" data-room="alcatraz" data-price="1600">
+                            <div class="room-image" style="background-image: url('{% static "img/alcatraz.jpg" %}');"></div>
+                            <h3 class="room-name">Vězení Alcatraz</h3>
+                            <div class="room-info">
+                                <div class="room-difficulty">
+                                    <div class="difficulty-dot active"></div>
+                                    <div class="difficulty-dot active"></div>
+                                    <div class="difficulty-dot active"></div>
+                                    <div class="difficulty-dot active"></div>
+                                    <div class="difficulty-dot active"></div>
+                                </div>
+                                <div class="room-price">1600 Kč</div>
+                            </div>
+                            <div class="room-features">
+                                <div class="room-feature">👥 3-6 hráčů</div>
+                                <div class="room-feature">⏱️ 60 minut</div>
+                                <div class="room-feature">🎯 Extrémní</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Date and Time Selection -->
+                <div class="booking-step" id="booking-step-2" style="display: none;">
+                    <h2>Vyberte datum a čas</h2>
+                    <div class="date-selection">
+                        <div class="calendar-container">
+                            <div class="calendar-header">
+                                <div class="calendar-title" id="calendar-title">Prosinec 2024</div>
+                                <div class="calendar-nav">
+                                    <button id="prev-month">‹</button>
+                                    <button id="next-month">›</button>
+                                </div>
+                            </div>
+                            <div class="calendar-grid" id="calendar-grid">
+                                <!-- Calendar will be generated by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <div class="time-slots-container">
+                            <h3 class="time-slots-header">Dostupné časy</h3>
+                            <div class="time-slots-grid" id="time-slots">
+                                <div class="time-slot" data-time="10:00">10:00</div>
+                                <div class="time-slot" data-time="12:00">12:00</div>
+                                <div class="time-slot" data-time="14:00">14:00</div>
+                                <div class="time-slot" data-time="16:00">16:00</div>
+                                <div class="time-slot" data-time="18:00">18:00</div>
+                                <div class="time-slot" data-time="20:00">20:00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Personal Information -->
+                <div class="booking-step" id="booking-step-3" style="display: none;">
+                    <h2>Kontaktní údaje</h2>
+                    <form class="personal-info-form" id="personal-info-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="first-name">Jméno <span>*</span></label>
+                                <input type="text" id="first-name" class="form-control" placeholder="Jan" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="last-name">Příjmení <span>*</span></label>
+                                <input type="text" id="last-name" class="form-control" placeholder="Novák" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">E-mail <span>*</span></label>
+                            <input type="email" id="email" class="form-control" placeholder="jan.novak@email.cz" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Telefon <span>*</span></label>
+                            <input type="tel" id="phone" class="form-control" placeholder="+420 123 456 789" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="players">Počet hráčů <span>*</span></label>
+                            <select id="players" class="form-control" required>
+                                <option value="">Vyberte počet hráčů</option>
+                                <option value="2">2 hráči</option>
+                                <option value="3">3 hráči</option>
+                                <option value="4">4 hráči</option>
+                                <option value="5">5 hráčů</option>
+                                <option value="6">6 hráčů</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="notes">Poznámky (nepovinné)</label>
+                            <textarea id="notes" class="form-control" rows="4" placeholder="Máte nějaké speciální požadavky nebo poznámky?"></textarea>
+                        </div>
+                        
+                        <div class="form-note">
+                            <strong>Poznámka:</strong> Platba probíhá na místě v hotovosti nebo kartou. 
+                            Rezervaci je možné zrušit nejpozději 24 hodin předem.
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Step 4: Confirmation -->
+                <div class="booking-step" id="booking-step-4" style="display: none;">
+                    <div class="booking-success">
+                        <div class="success-icon">✓</div>
+                        <h2 class="success-message">Rezervace byla úspěšně dokončena!</h2>
+                        <p class="success-details">
+                            Na váš e-mail jsme zaslali potvrzení rezervace s všemi důležitými informacemi.
+                            <br>Těšíme se na vás!
+                        </p>
+                        <div class="success-code">
+                            Kód rezervace: <span id="booking-code">EFT2024XXXX</span>
+                        </div>
+                        <a href="{% url 'home' %}" class="btn">Zpět na hlavní stránku</a>
+                    </div>
+                </div>
+                
+                <!-- Booking Summary (visible in steps 2-4) -->
+                <div class="booking-summary" id="booking-summary" style="display: none;">
+                    <h3 class="summary-title">Shrnutí rezervace</h3>
+                    <div class="summary-item">
+                        <span class="summary-label">Místnost:</span>
+                        <span class="summary-value" id="summary-room">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Datum:</span>
+                        <span class="summary-value" id="summary-date">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Čas:</span>
+                        <span class="summary-value" id="summary-time">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Počet hráčů:</span>
+                        <span class="summary-value" id="summary-players">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Celková cena:</span>
+                        <span class="summary-value" id="summary-price">-</span>
+                    </div>
+                </div>
+                
+                <!-- Navigation Buttons moved back to bottom -->
+                <div class="booking-navigation" id="booking-navigation">
+                    <button class="nav-btn btn-back" id="btn-back" style="display: none;">
+                        Zpět
+                    </button>
+                    <button class="nav-btn btn-next" id="btn-next" disabled>
+                        Pokračovat
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loading-overlay">
+    <div class="loading-spinner"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Stav rezervace
+        let bookingState = {
+            currentStep: 1,
+            selectedRoom: null,
+            selectedDate: null,
+            selectedTime: null,
+            personalInfo: {},
+            roomPrice: 0,
+            roomName: ''
+        };
+        
+        // Elementy
+        const steps = document.querySelectorAll('.booking-step');
+        const progressSteps = document.querySelectorAll('.progress-step');
+        const btnNext = document.getElementById('btn-next');
+        const btnBack = document.getElementById('btn-back');
+        const bookingSummary = document.getElementById('booking-summary');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        
+        // Výběr místnosti
+        const roomOptions = document.querySelectorAll('.room-option');
+        roomOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                roomOptions.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+    
+                bookingState.selectedRoom = this.dataset.roomId;
+                bookingState.roomPrice = parseInt(this.dataset.price);
+                bookingState.roomName = this.querySelector('.room-name').textContent;
+                
+                // Aktualizace souhrnu
+                document.getElementById('summary-room').textContent = bookingState.roomName;
+                document.getElementById('summary-price').textContent = bookingState.roomPrice + ' Kč';
+                
+                // Povolit další krok
+                btnNext.disabled = false;
+            });
+        });
+        
+        // Funkce kalendáře (vaše existující logika je v pořádku, jen ji propojíme s AJAXem)
+        let currentMonth = new Date();
+        
+        function generateCalendar() {
+            // Váš stávající kód pro generování kalendáře
+            // ...
+            const calendarGrid = document.getElementById('calendar-grid');
+            const calendarTitle = document.getElementById('calendar-title');
+            
+            calendarGrid.innerHTML = '';
+            const dayLabels = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
+            dayLabels.forEach(day => {
+                const label = document.createElement('div');
+                label.className = 'day-label';
+                label.textContent = day;
+                calendarGrid.appendChild(label);
+            });
+            
+            const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+            const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+            
+            const monthNames = ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec', 'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec'];
+            calendarTitle.textContent = `${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`;
+            
+            let startDay = firstDay.getDay() || 7;
+            startDay = startDay === 1 ? 1 : startDay -1; // Převod na Po-Ne
+            for (let i = 1; i < startDay; i++) {
+                const emptyDay = document.createElement('div');
+                calendarGrid.appendChild(emptyDay);
+            }
+            
+            const today = new Date();
+            today.setHours(0,0,0,0);
+    
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                
+                const currentDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+                
+                if (currentDate < today) {
+                    dayElement.classList.add('disabled');
+                } else {
+                    dayElement.addEventListener('click', function() {
+                        document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+                        this.classList.add('selected');
+                        bookingState.selectedDate = currentDate;
+                        
+                        const dateStr = `${day}. ${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`;
+                        document.getElementById('summary-date').textContent = dateStr;
+                        
+                        updateTimeSlots();
+                        checkStep2Completion();
+                    });
+                }
+                
+                if (currentDate.toDateString() === today.toDateString()) {
+                    dayElement.classList.add('today');
+                }
+                
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+        
+        document.getElementById('prev-month').addEventListener('click', function() {
+            currentMonth.setMonth(currentMonth.getMonth() - 1);
+            generateCalendar();
+        });
+        
+        document.getElementById('next-month').addEventListener('click', function() {
+            currentMonth.setMonth(currentMonth.getMonth() + 1);
+            generateCalendar();
+        });
+    
+        // Funkce pro načtení dostupných časů z backendu
+        function updateTimeSlots() {
+            if (!bookingState.selectedRoom || !bookingState.selectedDate) return;
+    
+            const timeSlotsContainer = document.getElementById('time-slots');
+            timeSlotsContainer.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">Načítání volných termínů...</p>';
+    
+            const dateStr = bookingState.selectedDate.toISOString().split('T')[0];
+            const url = `{% url 'get_available_slots' %}?date=${dateStr}&room_id=${bookingState.selectedRoom}`;
+    
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    timeSlotsContainer.innerHTML = '';
+                    const allSlots = ["10:00", "12:00", "14:00", "16:00", "18:00", "20:00"];
+                    
+                    allSlots.forEach(time => {
+                        const slotEl = document.createElement('div');
+                        slotEl.className = 'time-slot';
+                        slotEl.dataset.time = time;
+                        slotEl.textContent = time;
+    
+                        if (!data.available_slots.includes(time)) {
+                            slotEl.classList.add('disabled');
+                        } else {
+                            slotEl.onclick = function() {
+                                if (this.classList.contains('disabled')) return;
+                                document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                                this.classList.add('selected');
+                                bookingState.selectedTime = this.dataset.time;
+                                document.getElementById('summary-time').textContent = bookingState.selectedTime;
+                                checkStep2Completion();
+                            };
+                        }
+                        timeSlotsContainer.appendChild(slotEl);
+                    });
+                })
+                .catch(error => {
+                    console.error('Chyba při načítání časových slotů:', error);
+                    timeSlotsContainer.innerHTML = '<p style="text-align:center; grid-column: 1 / -1; color: #e63946;">Chyba při načítání. Zkuste to znovu.</p>';
+                });
+        }
+        
+        // Zpracování odeslání formuláře
+        btnNext.addEventListener('click', function() {
+            if (bookingState.currentStep === 3) {
+                // Sbíráme data z formuláře
+                bookingState.personalInfo = {
+                    firstName: document.getElementById('first-name').value,
+                    lastName: document.getElementById('last-name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    players: document.getElementById('players').value,
+                    notes: document.getElementById('notes').value
+                };
+                
+                // Vytvoříme FormData pro odeslání
+                const formData = new FormData();
+                const formElement = document.getElementById('personal-info-form');
+                formData.append('csrfmiddlewaretoken', formElement.querySelector('[name=csrfmiddlewaretoken]').value);
+                formData.append('room', bookingState.selectedRoom);
+                formData.append('date', bookingState.selectedDate.toISOString().split('T')[0]);
+                formData.append('time', bookingState.selectedTime);
+                formData.append('jmeno', bookingState.personalInfo.firstName);
+                formData.append('prijmeni', bookingState.personalInfo.lastName);
+                formData.append('email', bookingState.personalInfo.email);
+                formData.append('telefon', bookingState.personalInfo.phone);
+                formData.append('pocet_hracu', bookingState.personalInfo.players);
+                formData.append('poznamky', bookingState.personalInfo.notes);
+    
+                loadingOverlay.classList.add('active');
+    
+                fetch("{% url 'booking' %}", {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    loadingOverlay.classList.remove('active');
+                    if (data.success) {
+                        document.getElementById('booking-code').textContent = data.booking_code;
+                        goToStep(4);
+                    } else {
+                        console.error('Rezervace selhala:', data.errors);
+                        alert('Rezervace se nezdařila. Zkontrolujte prosím zadané údaje a zkuste to znovu. Je možné, že termín byl mezitím obsazen.');
+                    }
+                })
+                .catch(error => {
+                    loadingOverlay.classList.remove('active');
+                    console.error('Chyba při odesílání formuláře:', error);
+                    alert('Došlo k technické chybě. Zkuste to prosím znovu později.');
+                });
+            } else {
+                goToStep(bookingState.currentStep + 1);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    
+        // Váš zbývající JavaScript kód pro navigaci mezi kroky (goToStep, btnBack, atd.)
+        // ... Zde vložte zbývající část vašeho JS, je v pořádku.
+        
+        function checkStep2Completion() {
+            if (bookingState.selectedDate && bookingState.selectedTime) {
+                btnNext.disabled = false;
+            } else {
+                btnNext.disabled = true;
+            }
+        }
+        
+        const personalInfoForm = document.getElementById('personal-info-form');
+        const formInputs = personalInfoForm.querySelectorAll('input[required], select[required]');
+        
+        formInputs.forEach(input => {
+            input.addEventListener('input', validateForm);
+            input.addEventListener('change', validateForm);
+        });
+        
+        function validateForm() {
+            let isValid = true;
+            formInputs.forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                }
+            });
+            
+            btnNext.disabled = !isValid;
+            
+            const players = document.getElementById('players').value;
+            if (players) {
+                document.getElementById('summary-players').textContent = players;
+            }
+        }
+    
+        function goToStep(stepNumber) {
+            steps.forEach(step => step.style.display = 'none');
+            document.getElementById(`booking-step-${stepNumber}`).style.display = 'block';
+            
+            progressSteps.forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index < stepNumber - 1) {
+                    step.classList.add('completed');
+                } else if (index === stepNumber - 1) {
+                    step.classList.add('active');
+                }
+            });
+            
+            btnBack.style.display = stepNumber > 1 && stepNumber < 4 ? 'block' : 'none';
+            
+            if (stepNumber === 4) {
+                document.getElementById('booking-navigation').style.display = 'none';
+            } else {
+                document.getElementById('booking-navigation').style.display = 'flex';
+            }
+            
+            bookingSummary.style.display = stepNumber > 1 && stepNumber < 4 ? 'block' : 'none';
+            
+            btnNext.disabled = true;
+            
+            if (stepNumber === 3) {
+                btnNext.textContent = 'Dokončit rezervaci';
+                validateForm(); // Zkontrolujeme formulář při přechodu na krok 3
+            } else {
+                btnNext.textContent = 'Pokračovat';
+            }
+            
+            if (stepNumber === 1 && bookingState.selectedRoom) {
+                btnNext.disabled = false;
+            } else if (stepNumber === 2) {
+                checkStep2Completion();
+            }
+            
+            bookingState.currentStep = stepNumber;
+        }
+    
+        btnBack.addEventListener('click', function() {
+            goToStep(bookingState.currentStep - 1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    
+        // Inicializace kalendáře
+        generateCalendar();
+    });
+    </script>
+    
+{% endblock %}

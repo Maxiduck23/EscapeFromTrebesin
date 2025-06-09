@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Stránka nenalezena{% endblock %}
+
+{% block extra_css %}
+<style>
+    .error-page {
+        text-align: center;
+        padding: 80px 20px;
+    }
+    .error-page a {
+        color: #e63946;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="error-page">
+    <h1>404 - Stránka nenalezena</h1>
+    <p>Omlouváme se, ale požadovaná stránka nebyla nalezena.</p>
+    <p><a href="{% url 'home' %}">Zpět na úvodní stránku</a></p>
+</section>
+{% endblock %}
