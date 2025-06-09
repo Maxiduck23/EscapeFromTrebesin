@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "main/base.html" %}
 
 {% block title %}Stránka nenalezena{% endblock %}
 
@@ -18,6 +18,6 @@
 <section class="error-page">
     <h1>404 - Stránka nenalezena</h1>
     <p>Omlouváme se, ale požadovaná stránka nebyla nalezena.</p>
-    <p><a href="{% url 'home' %}">Zpět na úvodní stránku</a></p>
+    <p><a href="{% url 'main:home' %}">Zpět na úvodní stránku</a></p>
 </section>
 {% endblock %}

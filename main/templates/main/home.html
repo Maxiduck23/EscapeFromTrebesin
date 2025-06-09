@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "main/base.html" %}
 {% load static %}
 
 {% block title %}Escape From Třebešín - Únikové hry v Praze{% endblock %}
@@ -459,7 +459,7 @@
         <h1>Dokážete uniknout v časovém limitu?</h1>
         <p>Vítejte ve světě záhad, logických hádanek a týmové spolupráce. Naše unikátní escape rooms vás přenesou do jiného světa, kde máte jen 60 minut na vyřešení všech záhad a únik z nebezpečné situace.</p>
         <div class="hero-buttons">
-            <a href="{% url 'booking' %}" class="btn btn-primary">Rezervovat hru</a>
+            <a href="{% url 'booking:booking' %}" class="btn btn-primary">Rezervovat hru</a>
             <a href="#rooms" class="btn btn-secondary">Prozkoumat místnosti</a>
         </div>
     </div>
@@ -519,7 +519,7 @@
                         <span class="feature-tag">Hádanky</span>
                     </div>
                     <p class="room-description">Ocitli jste se v zapečetěné egyptské hrobce plné starověkých pastí a mystických hádanek. Kyslík pomalu dochází a času je málo. Dokážete rozluštit hieroglyfy, najít skryté mechanismy a uniknout dříve, než se stanou součástí věčnosti faraona?</p>
-                    <a href="{% url 'details' %}#tomb" class="btn">Více informací</a>
+                    <a href="{% url 'main:details' %}#tomb" class="btn">Více informací</a>
                 </div>
             </div>
 
@@ -543,7 +543,7 @@
                         <span class="feature-tag">Thriller</span>
                     </div>
                     <p class="room-description">V opuštěné laboratoři šíleného vědce se připravuje smrtelný virus, který může zničit lidstvo. Jako tým expertů máte za úkol najít protilátku a zabránit globální katastrofě. Každá minuta se počítá, protože virus se již začíná šířit!</p>
-                    <a href="{% url 'details' %}#lab" class="btn">Více informací</a>
+                    <a href="{% url 'main:details' %}#lab" class="btn">Více informací</a>
                 </div>
             </div>
 
@@ -567,7 +567,7 @@
                         <span class="feature-tag">Napětí</span>
                     </div>
                     <p class="room-description">Byli jste nespravedlivě uvězněni v nejpřísněji střeženém vězení světa. Během výpadku proudu se vám naskytla jedinečná příležitost k útěku. Dokážete překonat všechny bezpečnostní systémy a opustit Alcatraz dříve, než se strážní vrátí?</p>
-                    <a href="{% url 'details' %}#alcatraz" class="btn">Více informací</a>
+                    <a href="{% url 'main:details' %}#alcatraz" class="btn">Více informací</a>
                 </div>
             </div>
         </div>
@@ -603,7 +603,7 @@
         <div class="cta-content">
             <h2>Připraveni na dobrodružství?</h2>
             <p>Rezervujte si termín ještě dnes a zažijte napětí, které vás bude provázet celou cestu domů!</p>
-            <a href="{% url 'booking' %}" class="btn btn-cta">Rezervovat nyní</a>
+            <a href="{% url 'booking:booking' %}" class="btn btn-cta">Rezervovat nyní</a>
         </div>
     </div>
 </section>

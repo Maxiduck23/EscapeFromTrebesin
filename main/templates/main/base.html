@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{% block title %}EscapeFromTrebesin{% endblock %}</title>
     <meta name="description" content="Unikátní escape rooms v Praze – logické hádanky, dobrodružství a týmová zábava." />
-    <link rel="icon" href="{% static 'img/logo1.svg' %}" type="image/svg+xml"  <a href="{% url 'home' %}">Úvod</a> />
+    <link rel="icon" href="{% static 'img/logo1.svg' %}" type="image/svg+xml" />
     
     <style>
         * {
@@ -305,21 +305,22 @@
     <header>
         <nav>
             <div class="logo">
+                <a href="{% url 'main:home' %}" class="logo-link"> <div class="logo">
                 <img src="{% static 'img/logo1.svg' %}" alt="Escape from Třebešín logo" />
                 <p>ESCAPE FROM TŘEBEŠÍN</p>
             </div>
             <ul class="menu">
-                <li><a href="{% url 'about' %}">O nás</a></li>
+                <li><a href="{% url 'main:about' %}">O nás</a></li>
                 <li class="dropdown">
-                    <a href="{% url 'details' %}" class="dropdown-toggle">Naše místnosti</a>
+                    <a href="{% url 'main:details' %}" class="dropdown-toggle">Naše místnosti</a>
                     <ul class="dropdown-menu">
-                        <li><a href="{% url 'tomb' %}">Egyptská hrobka</a></li>
-                        <li><a href="{% url 'lab' %}">Laboratoř šíleného vědce</a></li>
-                        <li><a href="{% url 'alcatraz' %}">Vězení Alcatraz</a></li>
+                        <li><a href="{% url 'main:tomb' %}">Egyptská hrobka</a></li>
+                        <li><a href="{% url 'main:lab' %}">Laboratoř šíleného vědce</a></li>
+                        <li><a href="{% url 'main:alcatraz' %}">Vězení Alcatraz</a></li>
                     </ul>
                 </li>
-                <li><a href="{% url 'booking' %}">Rezervace</a></li>
-                <li><a href="{% url 'kontact' %}">Kontakt</a></li>
+                <li><a href="{% url 'booking:booking' %}">Rezervace</a></li>
+                <li><a href="{% url 'main:kontact' %}">Kontakt</a></li>
             </ul>
         </nav>
     </header>
@@ -331,11 +332,11 @@
 
     <footer>
         <ul class="footer-links">
-            <li><a href="{% url 'home' %}">Úvod</a></li>
-            <li><a href="{% url 'about' %}">O nás</a></li>
-            <li><a href="{% url 'details' %}">Naše místnosti</a></li>
-            <li><a href="{% url 'booking' %}">Rezervace</a></li>
-            <li><a href="{% url 'kontact' %}">Kontakt</a></li>
+            <li><a href="{% url 'main:home' %}">Úvod</a></li>
+            <li><a href="{% url 'main:about' %}">O nás</a></li>
+            <li><a href="{% url 'main:details' %}">Naše místnosti</a></li>
+            <li><a href="{% url 'booking:booking' %}">Rezervace</a></li>
+            <li><a href="{% url 'main:kontact' %}">Kontakt</a></li>
         </ul>
         <p class="copyright">© 2025 EscapeFromTrebesin. Všechna práva vyhrazena.</p>
     </footer>

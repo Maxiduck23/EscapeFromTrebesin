@@ -1,5 +1,5 @@
 {# templates/kontact.html #}
-{% extends 'base.html' %}
+{% extends 'main/base.html' %}
 {% load static %}
 
 {% block title %}
@@ -292,7 +292,7 @@ Kontakt | EscapeFromTrebesin
 
             <p style="margin-top: 30px;">
               Pro rezervace máme otevřeno <strong>každý den, celý den</strong> 🙂.
-              <a href="{% url 'booking' %}" class="important-text-info">Rezervujte online</a>.
+              <a href="{% url 'booking:booking' %}" class="important-text-info">Rezervujte online</a>.
             </p>
             <p>
               V případě dotazů, které nelze řešit e-mailem, volejte na

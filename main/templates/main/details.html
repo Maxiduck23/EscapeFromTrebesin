@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'main/base.html' %}
 {% load static %}
 
 {% block title %}Naše místnosti - EscapeFromTrebesin{% endblock %}
@@ -236,7 +236,7 @@
 
         <div class="rooms-grid">
             <!-- Egyptská hrobka -->
-            <div class="room-card" onclick="window.location.href='{% url 'tomb' %}'">
+            <div class="room-card" onclick="window.location.href='{% url 'main:tomb' %}'">
                 <div class="room-image" style="background-image: url('{% static 'img/tomb.jpg' %}')">
                     <div class="difficulty-badge">Střední</div>
                     <div class="price-tag">1200 Kč</div>
@@ -261,14 +261,14 @@
                         </div>
                     </div>
                     <div class="room-actions">
-                        <a href="{% url 'tomb' %}" class="btn-primary">Více informací</a>
-                        <a href="{% url 'booking' %}" class="btn-secondary">Rezervovat</a>
+                        <a href="{% url 'main:tomb' %}" class="btn-primary">Více informací</a>
+                        <a href="{% url 'booking:booking' %}" class="btn-secondary">Rezervovat</a>
                     </div>
                 </div>
             </div>
 
             <!-- Laboratoř -->
-            <div class="room-card" onclick="window.location.href='{% url 'lab' %}'">
+            <div class="room-card" onclick="window.location.href='{% url 'main:lab' %}'">
                 <div class="room-image" style="background-image: url('{% static 'img/lab.png' %}')">
                     <div class="difficulty-badge">Náročná</div>
                     <div class="price-tag">1400 Kč</div>
@@ -293,14 +293,14 @@
                         </div>
                     </div>
                     <div class="room-actions">
-                        <a href="{% url 'lab' %}" class="btn-primary">Více informací</a>
-                        <a href="{% url 'booking' %}" class="btn-secondary">Rezervovat</a>
+                        <a href="{% url 'main:lab' %}" class="btn-primary">Více informací</a>
+                        <a href="{% url 'booking:booking' %}" class="btn-secondary">Rezervovat</a>
                     </div>
                 </div>
             </div>
 
             <!-- Alcatraz -->
-            <div class="room-card" onclick="window.location.href='{% url 'alcatraz' %}'">
+            <div class="room-card" onclick="window.location.href='{% url 'main:alcatraz' %}'">
                 <div class="room-image" style="background-image: url('{% static 'img/alcatraz.jpg' %}')">
                     <div class="difficulty-badge">Extrémní</div>
                     <div class="price-tag">1600 Kč</div>
@@ -325,8 +325,8 @@
                         </div>
                     </div>
                     <div class="room-actions">
-                        <a href="{% url 'alcatraz' %}" class="btn-primary">Více informací</a>
-                        <a href="{% url 'booking' %}" class="btn-secondary">Rezervovat</a>
+                        <a href="{% url 'main:alcatraz' %}" class="btn-primary">Více informací</a>
+                        <a href="{% url 'booking:booking' %}" class="btn-secondary">Rezervovat</a>
                     </div>
                 </div>
             </div>

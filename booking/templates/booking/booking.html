@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "main/base.html" %}
 {% load static %}
 
 {% block title %}Rezervace | Escape From Třebešín{% endblock %}
@@ -856,7 +856,7 @@
                         <div class="success-code">
                             Kód rezervace: <span id="booking-code">EFT2024XXXX</span>
                         </div>
-                        <a href="{% url 'home' %}" class="btn">Zpět na hlavní stránku</a>
+                        <a href="{% url 'main:home' %}" class="btn">Zpět na hlavní stránku</a>
                     </div>
                 </div>
                 
@@ -1025,13 +1025,15 @@
         // Funkce pro načtení dostupných časů z backendu
         function updateTimeSlots() {
             if (!bookingState.selectedRoom || !bookingState.selectedDate) return;
-    
+        
             const timeSlotsContainer = document.getElementById('time-slots');
             timeSlotsContainer.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">Načítání volných termínů...</p>';
-    
+        
             const dateStr = bookingState.selectedDate.toISOString().split('T')[0];
-            const url = `{% url 'get_available_slots' %}?date=${dateStr}&room_id=${bookingState.selectedRoom}`;
-    
+            
+            // ZDE JE OPRAVA: přidali jsme 'booking:' před 'get_available_slots'
+            const url = `{% url 'booking:get_available_slots' %}?date=${dateStr}&room_id=${bookingState.selectedRoom}`;
+        
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
@@ -1043,7 +1045,7 @@
                         slotEl.className = 'time-slot';
                         slotEl.dataset.time = time;
                         slotEl.textContent = time;
-    
+        
                         if (!data.available_slots.includes(time)) {
                             slotEl.classList.add('disabled');
                         } else {
@@ -1094,7 +1096,7 @@
     
                 loadingOverlay.classList.add('active');
     
-                fetch("{% url 'booking' %}", {
+                fetch("{% url 'booking:booking' %}", {
                     method: 'POST',
                     body: formData,
                 })

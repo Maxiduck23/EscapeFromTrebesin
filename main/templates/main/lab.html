@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "main/base.html" %}
  {% load static %}
  
  {% block title %}
@@ -887,7 +887,7 @@
          <div class="reservation-section">
            <h3>Připraveni zachránit lidstvo?</h3>
            <p>Dokážete vytvořit protilátku dříve, než se virus rozšíří? Pouze nejlepší vědci dokáží uniknout z Dr. Frankensteinovy laboratoře!</p>
-           <a href="{% url 'booking' %}" class="btn">🧪 Zahájit vědecký experiment</a>
+           <a href="{% url 'booking:booking' %}" class="btn">🧪 Zahájit vědecký experiment</a>
          </div>
        </div>
      </div>
