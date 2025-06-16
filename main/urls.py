@@ -1,16 +1,24 @@
 # main/urls.py
 
 from django.urls import path
-from . import views
+from .views import (
+    home,
+    about,
+    kontact,
+    details,
+    tomb,
+    lab,
+    alcatraz,
+)
 
 app_name = 'main'
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('about/', views.about, name='about'),
-    path('kontact/', views.kontact, name='kontact'),
-    path('details/', views.details, name='details'),
-    path('tomb/', views.tomb, name='tomb'),
-    path('lab/', views.lab, name='lab'),
-    path('alcatraz/', views.alcatraz, name='alcatraz'),
+    path('', home, name='home'),
+    path('about/', about, name='about'),
+    path('kontact/', kontact, name='kontact'),
+    path('details/', details, name='details'),
+    path('tomb/', tomb, name='tomb'),
+    path('lab/', lab, name='lab'),
+    path('alcatraz/', alcatraz, name='alcatraz'),
 ]

@@ -1,33 +1,44 @@
-from django.shortcuts import render
-from booking.models import EscapeRoom # Importujeme model z druhé aplikace
+from django.views.generic import TemplateView
+from booking.models import EscapeRoom
 
-def home(request):
-    """Zobrazuje hlavní stránku."""
-    return render(request, 'main/home.html')
 
-def about(request):
-    """Zobrazuje stránku 'O nás'."""
-    return render(request, 'main/about.html')
+class HomeView(TemplateView):
+    template_name = 'main/home.html'
 
-def kontact(request):
-    """Zobrazuje stránku 'Kontakt'."""
-    return render(request, 'main/kontact.html')
 
-def details(request):
-    """Zobrazuje stránku s přehledem místností."""
-    context = {
-        'escape_rooms': EscapeRoom.objects.all()
-    }
-    return render(request, 'main/details.html', context)
+class AboutView(TemplateView):
+    template_name = 'main/about.html'
 
-def tomb(request):
-    """Zobrazuje detailní stránku pro 'Egyptská hrobka'."""
-    return render(request, 'main/tomb.html')
 
-def lab(request):
-    """Zobrazuje detailní stránku pro 'Laboratoř'."""
-    return render(request, 'main/lab.html')
+class KontactView(TemplateView):
+    template_name = 'main/kontact.html'
 
-def alcatraz(request):
-    """Zobrazuje detailní stránku pro 'Alcatraz'."""
-    return render(request, 'main/alcatraz.html')
+
+class DetailsView(TemplateView):
+    template_name = 'main/details.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['escape_rooms'] = EscapeRoom.objects.all()
+        return context
+
+
+class TombView(TemplateView):
+    template_name = 'main/tomb.html'
+
+
+class LabView(TemplateView):
+    template_name = 'main/lab.html'
+
+
+class AlcatrazView(TemplateView):
+    template_name = 'main/alcatraz.html'
+
+
+home = HomeView.as_view()
+about = AboutView.as_view()
+kontact = KontactView.as_view()
+details = DetailsView.as_view()
+tomb = TombView.as_view()
+lab = LabView.as_view()
+alcatraz = AlcatrazView.as_view()
