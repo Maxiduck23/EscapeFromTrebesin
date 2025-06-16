@@ -1,0 +1,360 @@
+  /* ========================= ABOUT PAGE SPECIFIC STYLES ========================= */
+  
+  /* Quote and Mission Text as Smaller Citations */
+  .quote-text {
+    font-size: 1.3rem;
+    font-style: italic;
+    font-weight: 300;
+    text-align: center;
+    margin: 0 auto 30px; /* Reduced from 40px */
+    max-width: 100%; /* Changed to full width */
+    color: #b8b8b8;
+    position: relative;
+    padding: 20px 50px;
+    line-height: 1.8;
+    animation: fadeInUp 1s ease-out;
+    border-left: 3px solid #e63946;
+    background: rgba(230, 57, 70, 0.03);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 0 8px 8px 0;
+  }
+  
+  .quote-text::before,
+  .quote-text::after {
+    content: '"';
+    font-size: 2.5rem;
+    position: absolute;
+    color: #e63946;
+    opacity: 0.3;
+    font-family: Georgia, serif;
+  }
+  
+  .quote-text::before {
+    top: -10px;
+    left: 10px;
+  }
+  
+  .quote-text::after {
+    bottom: -25px;
+    right: 10px;
+  }
+  
+  /* Interactive Mission Text */
+  .mission-text {
+    font-size: 1.4rem;
+    text-align: center;
+    font-weight: 400;
+    font-style: italic;
+    margin: 30px auto 20px; /* Reduced top and bottom margins */
+    max-width: 800px; /* Adjusted to be slightly wider */
+    color: #f0f0f0;
+    position: relative;
+    padding: 25px 40px;
+    line-height: 1.7;
+    animation: fadeInUp 1s ease-out 0.2s both;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, rgba(19, 19, 19, 0.8) 100%);
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  .mission-text::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+  }
+  
+  .mission-text:hover::before {
+    left: 100%;
+  }
+  
+  .mission-text:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(230, 57, 70, 0.4);
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.2) 0%, rgba(19, 19, 19, 0.9) 100%);
+  }
+  
+  .mission-text:active {
+    transform: translateY(-2px) scale(1.01);
+  }
+  
+  /* Hover effects for citations */
+  .quote-text:hover {
+    background: rgba(230, 57, 70, 0.06);
+    border-left-width: 5px;
+    transition: all 0.3s ease;
+    transform: translateX(5px);
+  }
+  
+  .citation-author {
+    display: block;
+    font-size: 0.9rem;
+    font-style: normal;
+    margin-top: 10px;
+    color: #e63946;
+    opacity: 0.8;
+  }
+  
+  /* About Grid with Equal Heights */
+  .about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px; /* Reduced from 40px */
+    align-items: stretch;
+    margin-bottom: 40px; /* Reduced from 60px */
+  }
+  
+  .about-card {
+    background: linear-gradient(135deg, #131313 0%, #0a0a0a 100%);
+    padding: 50px; /* Increased padding for 720px height */
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    min-height: 540px; /* Set to requested height */
+    height: 540px; /* Fixed height */
+  }
+  
+  .about-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(230, 57, 70, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .about-card:hover::before {
+    opacity: 1;
+  }
+  
+  .about-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(230, 57, 70, 0.3);
+  }
+  
+  /* Text card specific styles */
+  .about-card.text-card {
+    justify-content: center; /* Center content vertically */
+    padding: 60px 40px; /* Increased padding for better spacing */
+  }
+  
+  .about-card p {
+    line-height: 1.8; /* Increased back for better readability with more height */
+    margin-bottom: 25px; /* Increased spacing between paragraphs */
+    font-size: 1.1rem; /* Slightly larger text */
+    position: relative;
+    z-index: 1;
+  }
+  
+  .about-card p:first-child {
+    font-size: 1.25rem; /* Larger first paragraph */
+    font-weight: 500;
+    color: #e63946;
+    margin-bottom: 30px; /* More space after first paragraph */
+  }
+  
+  .about-card p:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* Image card specific styles */
+  .about-card.image-card {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 540px; /* Match the card height */
+    height: 540px; /* Fixed height */
+  }
+  
+  .about-card img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: none; /* Remove max-height limit */
+    object-fit: cover;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+  }
+  
+  .about-card:hover img {
+    transform: scale(1.05);
+  }
+  
+  /* FAQ Section with Enhanced Design */
+  .faq-section {
+    background: linear-gradient(180deg, #0a0a0a 0%, #131313 100%);
+    padding: 80px 0;
+    position: relative;
+  }
+  
+  .faq-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e63946, transparent);
+  }
+  
+  .faq-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .faq-title {
+    text-align: center;
+    margin-bottom: 50px;
+    position: relative;
+  }
+  
+  .faq-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: #e63946;
+  }
+  
+  .accordion {
+    background: linear-gradient(135deg, #1c1c1c 0%, #131313 100%);
+    color: #f0f0f0;
+    cursor: pointer;
+    padding: 20px 25px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .accordion::after {
+    content: '+';
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .accordion.active::after {
+    content: '−';
+    transform: translateY(-50%) rotate(180deg);
+  }
+  
+  .accordion:hover,
+  .accordion.active {
+    background: linear-gradient(135deg, #e63946 0%, #c1121f 100%);
+    transform: translateX(5px);
+    box-shadow: 0 5px 20px rgba(230, 57, 70, 0.4);
+  }
+  
+  .panel {
+    max-height: 0;
+    overflow: hidden;
+    background-color: #1c1c1c;
+    margin: -10px 0 15px 20px;
+    border-left: 3px solid #e63946;
+    border-radius: 0 10px 10px 0;
+    transition: all 0.4s ease;
+    opacity: 0;
+  }
+  
+  .panel.open {
+    max-height: 500px;
+    padding: 20px 25px;
+    opacity: 1;
+    box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .panel p {
+    line-height: 1.7;
+    font-size: 1rem;
+    color: #f0f0f0;
+  }
+  
+  /* Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Section Dividers */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e63946, transparent);
+    margin: 40px 0; /* Reduced from 60px */
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .quote-text {
+      font-size: 1.1rem;
+      padding: 15px 30px;
+    }
+    
+    .quote-text::before,
+    .quote-text::after {
+      font-size: 2rem;
+    }
+    
+    .mission-text {
+      font-size: 1.2rem;
+      padding: 20px 25px;
+    }
+    
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    
+    .about-card {
+      min-height: auto;
+      height: auto; /* Allow height to be flexible on mobile */
+    }
+    
+    .about-card.image-card {
+      min-height: 400px; /* Reasonable height for mobile */
+      height: 400px;
+    }
+    
+    .accordion {
+      font-size: 1rem;
+      padding: 15px 20px;
+    }
+    
+    .accordion::after {
+      right: 15px;
+    }
+  }
