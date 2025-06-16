@@ -1,0 +1,244 @@
+  /* ========================= SPECIFICKÉ STYLY PRO STRÁNKU KONTAKT ========================= */
+
+  /* Section wrappers */
+  .section-container {
+    padding: 20px;
+    margin-bottom: 80px;
+  }
+  /* První sekce: pouze spodní linka */
+  .section-container:nth-of-type(1) {
+    border-bottom: 3px solid #e63946;
+    border-radius: 10px 10px 10px 10px;
+
+
+  }
+  /* Druhá sekce: horní i spodní linka */
+  .section-container:nth-of-type(2) {
+    border-top: 3px solid #e63946;
+    border-bottom: 3px solid #e63946;
+    border-radius: 10px 10px 10px 10px;
+
+
+  }
+  /* Třetí sekce: pouze horní linka */
+  .section-container:nth-of-type(3) {
+    border-top: 3px solid #e63946;
+    border-radius: 10px 10px 10px 10px;
+
+  }
+
+  /* ========================= KONTAKTNÍ MŘÍŽKA & KARTY ========================= */
+  /* Pro první sekci rozdělíme na dvě části (podobně jako u about-grid) */
+  .contact-main-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  /* Každá karta v první sekci má fixní výšku 540px */
+  .contact-main-grid .contact-card {
+    height: 540px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* aby se centrálně vyrovnal text nebo obrázek */
+    align-items: center;
+  }
+
+  /* Pro ostatní sekce ponecháme .contact-grid */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  /* Obecný styl kartiček (podobný about-card) */
+  .contact-card,
+  .branch-card {
+    background: linear-gradient(135deg, #131313 0%, #0a0a0a 100%);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+  }
+  /* Pseudo-element pro efekt osvětlení */
+  .contact-card::before,
+  .branch-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(230,57,70,0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .contact-card::before,
+  .branch-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(230,57,70,0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  
+    /* aby pseudo-element neblokoval kliknutí */
+    pointer-events: none;
+  }
+  /* Podobně jako u .about-card:hover */
+  .contact-card:hover::before,
+  .branch-card:hover::before {
+    opacity: 1;
+  }
+  .contact-card:hover,
+  .branch-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(230,57,70,0.3);
+    background: linear-gradient(135deg, rgba(19,19,19,0.9) 0%, rgba(230,57,70,0.2) 100%);
+  }
+
+  .contact-card h2,
+  .contact-card h3,
+  .branch-info h3 {
+    margin-bottom: 20px;
+    color: #e63946;
+    text-align: center;
+  }
+  .contact-card p,
+  .branch-info p {
+    line-height: 1.7;
+    margin-bottom: 15px;
+    color: #f0f0f0;
+    text-align: center;
+  }
+  .contact-card a,
+  .branch-info a {
+    color: #e63946;
+    transition: color 0.3s;
+  }
+  .contact-card a:hover,
+  .branch-info a:hover {
+    color: #c1121f;
+  }
+
+  /* Centrum obsahu uvnitř karet */
+  .contact-card img,
+  .branch-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    transition: transform 0.3s ease;
+  }
+  .contact-card:hover img,
+  .branch-card:hover img {
+    transform: scale(1.05);
+  }
+
+  .branches {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+  }
+  
+  /* Make each branch card a two‐column grid so both columns always match the card’s width */
+  .branch-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* exactly half-and-half */
+    background: linear-gradient(135deg, #131313 0%, #0a0a0a 100%);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  .branch-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(230, 57, 70, 0.3);
+    background: linear-gradient(135deg, rgba(19, 19, 19, 0.9) 0%, rgba(230, 57, 70, 0.2) 100%);
+  }
+  
+  /* Remove the old flex rules—this grid cell will now automatically be 50% of .branch-card */
+  .map-placeholder {
+    width: 100%;
+    height: 250px; /* keep a fixed height, or change as needed */
+    background-color: #1c1c1c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Ensure the <img> inside fills its grid cell completely */
+  .map-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .map-placeholder img:hover {
+    transform: scale(1.05);
+  }
+  
+  /* The info panel should also fill exactly 50% of the card */
+  .branch-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* vertically center text if you like */
+  }
+  
+  /* Keep text styling unchanged */
+  .branch-info h3 {
+    margin-bottom: 20px;
+    color: #e63946;
+    text-align: center;
+  }
+  .branch-info p {
+    margin-bottom: 10px;
+    color: #f0f0f0;
+    text-align: center;
+  }
+  .branch-info a {
+    color: #e63946;
+    transition: color 0.3s;
+  }
+  .branch-info a:hover {
+    color: #c1121f;
+  }
+
+  /* ========================= Přizpůsobení odkazů v patičce ========================= */
+  .footer-links a {
+    color: #f0f0f0;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .footer-links a:hover {
+    color: #e63946;
+  }
+
+  /* ========================= Responsivita ========================= */
+  @media (max-width: 768px) {
+    .contact-main-grid,
+    .contact-grid {
+      gap: 20px;
+    }
+    .branches {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .menu {
+      flex-direction: column;
+      gap: 10px;
+    }
+    .menu li {
+      margin-left: 0;
+    }
+  }
+</style>
