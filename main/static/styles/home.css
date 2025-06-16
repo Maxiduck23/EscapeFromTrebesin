@@ -389,10 +389,72 @@
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
     }
     
-    .btn-cta:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
+.btn-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Reservation Section (copied from room pages for animations) */
+.reservation-section {
+    background: linear-gradient(135deg, #e63946 0%, #c53030 100%);
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 50px;
+    position: relative;
+    overflow: hidden;
+}
+
+.reservation-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.reservation-section h3 {
+    color: #fff;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.reservation-section p {
+    color: rgba(255,255,255,0.9);
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+.reservation-section .btn {
+    background-color: #fff;
+    color: #e63946;
+    font-size: 1.2rem;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.reservation-section .btn:hover {
+    background-color: #f8f8f8;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
     
     /* Animations */
     @keyframes fadeInUp {
@@ -413,6 +475,12 @@
         to {
             text-shadow: 2px 2px 8px rgba(0,0,0,0.8), 0 0 20px rgba(230, 57, 70, 0.3);
         }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
     }
     
     /* Responsive Design */
