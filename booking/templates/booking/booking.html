@@ -44,65 +44,20 @@
                 <div class="booking-step" id="booking-step-1">
                     <h2>Vyberte si místnost</h2>
                     <div class="room-selection">
-                        <div class="room-option" data-room="tomb" data-price="1200">
-                            <div class="room-image" style="background-image: url('{% static "img/tomb.jpg" %}');"></div>
-                            <h3 class="room-name">Egyptská hrobka</h3>
+                        {% for room in escape_rooms %}
+                        <div class="room-option" data-room-id="{{ room.id_escape_room }}" data-price="{{ room.cena }}">
+                            <div class="room-image" style="background-image: url('{{ ('img/'|add:room.tema)|static }}');"></div>
+                            <h3 class="room-name">{{ room.nazev }}</h3>
                             <div class="room-info">
-                                <div class="room-difficulty">
-                                    <div class="difficulty-dot active"></div>
-                                    <div class="difficulty-dot active"></div>
-                                    <div class="difficulty-dot active"></div>
-                                    <div class="difficulty-dot"></div>
-                                    <div class="difficulty-dot"></div>
-                                </div>
-                                <div class="room-price">1200 Kč</div>
+                                <div class="room-difficulty">{{ room.obtiznost }}</div>
+                                <div class="room-price">{{ room.cena }} Kč</div>
                             </div>
                             <div class="room-features">
-                                <div class="room-feature">👥 2-6 hráčů</div>
-                                <div class="room-feature">⏱️ 60 minut</div>
-                                <div class="room-feature">🎯 Střední</div>
+                                <div class="room-feature">💀 {{ room.strasidelnost }}</div>
+                                <div class="room-feature">👶 {{ room.doporuceny_vek }}</div>
                             </div>
                         </div>
-                        
-                        <div class="room-option" data-room="lab" data-price="1400">
-                            <div class="room-image" style="background-image: url('{% static "img/lab.png" %}');"></div>
-                            <h3 class="room-name">Laboratoř šíleného vědce</h3>
-                            <div class="room-info">
-                                <div class="room-difficulty">
-                                    <div class="difficulty-dot active"></div>
-                                    <div class="difficulty-dot active"></div>
-                                    <div class="difficulty-dot active"></div>
-                                    <div class="difficulty-dot active"></div>
-                                    <div class="difficulty-dot"></div>
-                                </div>
-                                <div class="room-price">1400 Kč</div>
-                            </div>
-                            <div class="room-features">
-                                <div class="room-feature">👥 2-5 hráčů</div>
-                                <div class="room-feature">⏱️ 60 minut</div>
-                                <div class="room-feature">🎯 Náročná</div>
-                            </div>
-                        </div>
-                        
-                        <div class="room-option" data-room="alcatraz" data-price="1600">
-                            <div class="room-image" style="background-image: url('{% static "img/alcatraz.jpg" %}');"></div>
-                            <h3 class="room-name">Vězení Alcatraz</h3>
-                            <div class="room-info">
-                                <div class="room-difficulty">
-                                    <div class="difficulty-dot active"></div>
-                                    <div class="difficulty-dot active"></div>
-                                    <div class="difficulty-dot active"></div>
-                                    <div class="difficulty-dot active"></div>
-                                    <div class="difficulty-dot active"></div>
-                                </div>
-                                <div class="room-price">1600 Kč</div>
-                            </div>
-                            <div class="room-features">
-                                <div class="room-feature">👥 3-6 hráčů</div>
-                                <div class="room-feature">⏱️ 60 minut</div>
-                                <div class="room-feature">🎯 Extrémní</div>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
                 
