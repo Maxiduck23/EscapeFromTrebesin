@@ -58,3 +58,50 @@
         card.style.animationDelay = `${index * 0.2}s`;
         card.classList.add('fade-in-up');
     });
+
+// Additional effects for reservation section
+document.addEventListener('DOMContentLoaded', function() {
+    // Scroll animation similar to lab.js
+    const reservationSection = document.querySelector('.reservation-section');
+    if (reservationSection) {
+        const reservationObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    reservationObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        reservationSection.style.opacity = '0';
+        reservationSection.style.transform = 'translateY(30px)';
+        reservationSection.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        reservationObserver.observe(reservationSection);
+    }
+
+    // Periodic pulse effect for the reservation button
+    const reservationBtn = document.querySelector('.reservation-section .btn');
+    if (reservationBtn) {
+        setInterval(() => {
+            reservationBtn.style.animation = 'none';
+            setTimeout(() => {
+                reservationBtn.style.animation = 'pulse 1s ease-in-out';
+            }, 10);
+        }, 5000);
+    }
+
+    // Inject @keyframes pulse if not already present
+    if (!document.getElementById('home-pulse-keyframes')) {
+        const style = document.createElement('style');
+        style.id = 'home-pulse-keyframes';
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+});
