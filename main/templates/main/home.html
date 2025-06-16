@@ -636,9 +636,13 @@
             if (entry.isIntersecting) {
                 const statNumbers = entry.target.querySelectorAll('.stat-number');
                 statNumbers.forEach(stat => {
-                    const finalValue = stat.textContent;
+                    const finalValue = stat.textContent.trim();
                     const isPercentage = finalValue.includes('%');
-                    const numericValue = parseInt(finalValue.replace(/\D/g, ''));
+                    if (finalValue.includes('-')) {
+                        return;
+                    }
+
+                    const numericValue = parseInt(finalValue.replace(/\D/g, ''), 10);
                     
                     let current = 0;
                     const increment = numericValue / 50;
