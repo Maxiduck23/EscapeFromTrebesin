@@ -1,17 +1,10 @@
 {% extends "main/base.html" %}
+{% load static %}
 
 {% block title %}Stránka nenalezena{% endblock %}
 
 {% block extra_css %}
-<style>
-    .error-page {
-        text-align: center;
-        padding: 80px 20px;
-    }
-    .error-page a {
-        color: #e63946;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'styles/404.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -20,4 +13,8 @@
     <p>Omlouváme se, ale požadovaná stránka nebyla nalezena.</p>
     <p><a href="{% url 'main:home' %}">Zpět na úvodní stránku</a></p>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/404.js' %}"></script>
 {% endblock %}
