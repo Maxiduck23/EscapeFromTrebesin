@@ -1,4 +1,19 @@
     document.addEventListener('DOMContentLoaded', function() {
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
         // Stav rezervace
         let bookingState = {
             currentStep: 1,
@@ -121,9 +136,7 @@
             timeSlotsContainer.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">Načítání volných termínů...</p>';
         
             const dateStr = bookingState.selectedDate.toISOString().split('T')[0];
-            
-            // ZDE JE OPRAVA: přidali jsme 'booking:' před 'get_available_slots'
-            const url = `{% url 'booking:get_available_slots' %}?date=${dateStr}&room_id=${bookingState.selectedRoom}`;
+            const url = `${window.bookingUrls.getAvailableSlots}?date=${dateStr}&room_id=${bookingState.selectedRoom}`;
         
             fetch(url)
                 .then(response => response.json())
@@ -173,8 +186,6 @@
                 
                 // Vytvoříme FormData pro odeslání
                 const formData = new FormData();
-                const formElement = document.getElementById('personal-info-form');
-                formData.append('csrfmiddlewaretoken', formElement.querySelector('[name=csrfmiddlewaretoken]').value);
                 formData.append('room', bookingState.selectedRoom);
                 formData.append('date', bookingState.selectedDate.toISOString().split('T')[0]);
                 formData.append('time', bookingState.selectedTime);
@@ -186,10 +197,13 @@
                 formData.append('poznamky', bookingState.personalInfo.notes);
     
                 loadingOverlay.classList.add('active');
-    
-                fetch("{% url 'booking:booking' %}", {
+
+                fetch(window.bookingUrls.bookingSubmit, {
                     method: 'POST',
                     body: formData,
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
                 })
                 .then(response => response.json())
                 .then(data => {

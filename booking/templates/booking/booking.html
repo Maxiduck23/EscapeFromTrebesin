@@ -140,7 +140,8 @@
                 <!-- Step 3: Personal Information -->
                 <div class="booking-step" id="booking-step-3" style="display: none;">
                     <h2>Kontaktní údaje</h2>
-                    <form class="personal-info-form" id="personal-info-form">
+                    <form class="personal-info-form" id="personal-info-form" method="post">
+                        {% csrf_token %}
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="first-name">Jméno <span>*</span></label>
@@ -248,5 +249,12 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+    window.bookingUrls = {
+        getAvailableSlots: "{% url 'booking:get_available_slots' %}",
+        bookingSubmit: "{% url 'booking:booking' %}",
+        csrfToken: "{{ csrf_token }}"
+    };
+</script>
 <script src="{% static 'js/booking.js' %}"></script>
 {% endblock %}
