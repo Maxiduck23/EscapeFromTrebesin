@@ -2,9 +2,20 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic import TemplateView
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError, transaction
+from django.utils.translation import gettext as _
+from django.core.validators import validate_email
+from django.core.mail import send_mail
+from django.conf import settings
+import re
+from datetime import datetime, date, time
+import logging
+
 from .forms import RezervaceForm
 from .models import Zakaznik, Rezervace, EscapeRoom
-from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 
 class HomeView(TemplateView):
@@ -48,7 +59,7 @@ class AlcatrazView(TemplateView):
 
 
 class BookingView(View):
-    """Zobrazuje a zpracovává formulář pro rezervaci."""
+    """Zobrazuje a zpracovává formulář pro rezervaci s vylepšenou validací."""
     template_name = 'booking/booking.html'
 
     def get(self, request):
@@ -56,59 +67,311 @@ class BookingView(View):
         return render(request, self.template_name, {'escape_rooms': escape_rooms})
 
     def post(self, request):
-        form = RezervaceForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            zakaznik, _ = Zakaznik.objects.get_or_create(
-                email=data['email'],
-                defaults={
-                    'jmeno': data['jmeno'],
-                    'prijmeni': data['prijmeni'],
-                    'telefon': data['telefon'],
-                }
-            )
-            try:
+        """Zpracuje rezervaci s důkladnou validací."""
+        try:
+            # Extrakce a validace dat
+            room_id = request.POST.get('room')
+            date_str = request.POST.get('date')
+            time_str = request.POST.get('time')
+            jmeno = request.POST.get('jmeno', '').strip()
+            prijmeni = request.POST.get('prijmeni', '').strip()
+            email = request.POST.get('email', '').strip().lower()
+            telefon = request.POST.get('telefon', '').strip()
+            pocet_hracu = request.POST.get('pocet_hracu')
+            poznamky = request.POST.get('poznamky', '').strip()
+
+            # Validace povinných polí
+            errors = {}
+            
+            # Validace místnosti
+            if not room_id:
+                errors['room'] = _('Vyberte místnost.')
+            else:
+                try:
+                    room = EscapeRoom.objects.get(pk=room_id)
+                except EscapeRoom.DoesNotExist:
+                    errors['room'] = _('Vybraná místnost neexistuje.')
+                    
+            # Validace data
+            if not date_str:
+                errors['date'] = _('Vyberte datum.')
+            else:
+                try:
+                    reservation_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+                    if reservation_date < date.today():
+                        errors['date'] = _('Nelze rezervovat minulé datum.')
+                    # Kontrola, že datum není více než 6 měsíců v budoucnu
+                    elif (reservation_date - date.today()).days > 180:
+                        errors['date'] = _('Nelze rezervovat více než 6 měsíců dopředu.')
+                except ValueError:
+                    errors['date'] = _('Neplatný formát data.')
+                    
+            # Validace času
+            if not time_str:
+                errors['time'] = _('Vyberte čas.')
+            else:
+                try:
+                    reservation_time = datetime.strptime(time_str, '%H:%M').time()
+                    allowed_times = [time(10, 0), time(12, 0), time(14, 0), 
+                                   time(16, 0), time(18, 0), time(20, 0)]
+                    if reservation_time not in allowed_times:
+                        errors['time'] = _('Neplatný čas rezervace.')
+                except ValueError:
+                    errors['time'] = _('Neplatný formát času.')
+                    
+            # Validace jména
+            if not jmeno:
+                errors['jmeno'] = _('Zadejte jméno.')
+            elif len(jmeno) < 2:
+                errors['jmeno'] = _('Jméno musí mít alespoň 2 znaky.')
+            elif len(jmeno) > 45:
+                errors['jmeno'] = _('Jméno je příliš dlouhé.')
+            elif not re.match(r'^[a-zA-ZěščřžýáíéůúňťďĚŠČŘŽÝÁÍÉŮÚŇŤĎ\s-]+$', jmeno):
+                errors['jmeno'] = _('Jméno obsahuje nepovolené znaky.')
+                
+            # Validace příjmení
+            if not prijmeni:
+                errors['prijmeni'] = _('Zadejte příjmení.')
+            elif len(prijmeni) < 2:
+                errors['prijmeni'] = _('Příjmení musí mít alespoň 2 znaky.')
+            elif len(prijmeni) > 45:
+                errors['prijmeni'] = _('Příjmení je příliš dlouhé.')
+            elif not re.match(r'^[a-zA-ZěščřžýáíéůúňťďĚŠČŘŽÝÁÍÉŮÚŇŤĎ\s-]+$', prijmeni):
+                errors['prijmeni'] = _('Příjmení obsahuje nepovolené znaky.')
+                
+            # Validace emailu
+            if not email:
+                errors['email'] = _('Zadejte e-mail.')
+            else:
+                try:
+                    validate_email(email)
+                    if len(email) > 45:
+                        errors['email'] = _('E-mail je příliš dlouhý.')
+                except ValidationError:
+                    errors['email'] = _('Neplatný formát e-mailu.')
+                    
+            # Validace telefonu
+            if not telefon:
+                errors['telefon'] = _('Zadejte telefon.')
+            else:
+                # Očistíme telefon od mezer a speciálních znaků
+                clean_telefon = re.sub(r'[\s\-\(\)]+', '', telefon)
+                if not re.match(r'^\+?[0-9]{9,15}$', clean_telefon):
+                    errors['telefon'] = _('Neplatný formát telefonu.')
+                elif len(telefon) > 45:
+                    errors['telefon'] = _('Telefon je příliš dlouhý.')
+                    
+            # Validace počtu hráčů
+            if not pocet_hracu:
+                errors['pocet_hracu'] = _('Zadejte počet hráčů.')
+            else:
+                try:
+                    pocet_hracu = int(pocet_hracu)
+                    if pocet_hracu < 2:
+                        errors['pocet_hracu'] = _('Minimální počet hráčů je 2.')
+                    elif pocet_hracu > 6:
+                        errors['pocet_hracu'] = _('Maximální počet hráčů je 6.')
+                except ValueError:
+                    errors['pocet_hracu'] = _('Neplatný počet hráčů.')
+                    
+            # Validace poznámek
+            if poznamky and len(poznamky) > 500:
+                errors['poznamky'] = _('Poznámky jsou příliš dlouhé.')
+
+            # Pokud jsou chyby, vrátíme je
+            if errors:
+                return JsonResponse({
+                    'success': False, 
+                    'errors': errors
+                })
+
+            # Použijeme databázovou transakci pro atomické operace
+            with transaction.atomic():
+                # Kontrola dostupnosti termínu
+                existing_reservation = Rezervace.objects.filter(
+                    escape_room=room,
+                    datum_rezervace=reservation_date,
+                    cas_rezervace=reservation_time
+                ).exists()
+                
+                if existing_reservation:
+                    return JsonResponse({
+                        'success': False, 
+                        'errors': {'__all__': [_('Tento termín je již obsazen.')]}
+                    })
+
+                # Vytvoření nebo nalezení zákazníka
+                zakaznik, created = Zakaznik.objects.get_or_create(
+                    email=email,
+                    defaults={
+                        'jmeno': jmeno,
+                        'prijmeni': prijmeni,
+                        'telefon': telefon,
+                    }
+                )
+                
+                # Aktualizace údajů zákazníka pokud již existuje
+                if not created:
+                    zakaznik.jmeno = jmeno
+                    zakaznik.prijmeni = prijmeni
+                    zakaznik.telefon = telefon
+                    zakaznik.save()
+
+                # Vytvoření rezervace
                 rezervace = Rezervace.objects.create(
-                    escape_room=data['room'],
-                    datum_rezervace=data['date'],
-                    cas_rezervace=data['time'],
-                    pocet_hracu=data['pocet_hracu'],
-                    poznamky=data.get('poznamky', ''),
+                    escape_room=room,
+                    datum_rezervace=reservation_date,
+                    cas_rezervace=reservation_time,
+                    pocet_hracu=pocet_hracu,
+                    poznamky=poznamky,
                     zakaznik=zakaznik
                 )
-                booking_code = f"EFT-{rezervace.id_rezervace}-{rezervace.datum_rezervace.year}"
-                return JsonResponse({'success': True, 'booking_code': booking_code})
-            except Exception:
-                return JsonResponse({'success': False, 'errors': {'__all__': ['Tento termín je již obsazen.']}})
-        return JsonResponse({'success': False, 'errors': form.errors})
+
+                # Generování kódu rezervace
+                booking_code = f"EFT-{rezervace.id_rezervace:04d}-{reservation_date.year}"
+                
+                # Odeslání potvrzovacího e-mailu (volitelné)
+                try:
+                    self.send_confirmation_email(zakaznik, rezervace, booking_code)
+                except Exception as e:
+                    logger.warning(f"Nepodařilo se odeslat potvrzovací e-mail: {e}")
+
+                logger.info(f"Nová rezervace vytvořena: {booking_code} pro {email}")
+
+                return JsonResponse({
+                    'success': True, 
+                    'booking_code': booking_code,
+                    'message': _('Rezervace byla úspěšně dokončena!')
+                })
+
+        except IntegrityError as e:
+            logger.error(f"Database integrity error: {e}")
+            return JsonResponse({
+                'success': False, 
+                'errors': {'__all__': [_('Tento termín je již obsazen.')]}
+            })
+            
+        except Exception as e:
+            logger.error(f"Unexpected error during booking: {e}")
+            return JsonResponse({
+                'success': False, 
+                'errors': {'__all__': [_('Došlo k neočekávané chybě. Zkuste to prosím znovu.')]}
+            })
+
+    def send_confirmation_email(self, zakaznik, rezervace, booking_code):
+        """Odešle potvrzovací e-mail zákazníkovi."""
+        if not hasattr(settings, 'EMAIL_HOST') or not settings.EMAIL_HOST:
+            return  # E-mail není nakonfigurován
+            
+        subject = f'Potvrzení rezervace - {booking_code}'
+        message = f"""
+Dobrý den {zakaznik.jmeno} {zakaznik.prijmeni},
+
+děkujeme za vaši rezervaci v Escape From Třebešín!
+
+Detaily rezervace:
+- Kód rezervace: {booking_code}
+- Místnost: {rezervace.escape_room.nazev}
+- Datum: {rezervace.datum_rezervace.strftime('%d.%m.%Y')}
+- Čas: {rezervace.cas_rezervace.strftime('%H:%M')}
+- Počet hráčů: {rezervace.pocet_hracu}
+- Lokace: {rezervace.escape_room.lokace.nazev}, {rezervace.escape_room.lokace.ulice}, {rezervace.escape_room.lokace.mesto}
+
+Poznámky: {rezervace.poznamky if rezervace.poznamky else 'Žádné'}
+
+Platba probíhá na místě v hotovosti nebo kartou.
+Rezervaci je možné zrušit nejpozději 24 hodin předem.
+
+Těšíme se na vás!
+
+S pozdravem,
+Tým Escape From Třebešín
+        """
+        
+        try:
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [zakaznik.email],
+                fail_silently=False,
+            )
+        except Exception as e:
+            logger.error(f"Chyba při odesílání e-mailu pro {zakaznik.email}: {e}")
+            raise
 
 
 class GetAvailableSlotsView(View):
-    """Vrací dostupné časové sloty pro vybranou místnost a datum."""
+    """Vrací dostupné časové sloty pro vybranou místnost a datum s vylepšenou validací."""
 
     def get(self, request):
         date_str = request.GET.get('date')
         room_id = request.GET.get('room_id')
+        
+        # Validace vstupních parametrů
         if not date_str or not room_id:
-            return JsonResponse({'error': 'Chybí datum nebo ID místnosti'}, status=400)
+            return JsonResponse({
+                'error': _('Chybí datum nebo ID místnosti')
+            }, status=400)
 
         try:
-            date = datetime.strptime(date_str, '%Y-%m-%d').date()
-            room = EscapeRoom.objects.get(pk=room_id)
-        except (ValueError, EscapeRoom.DoesNotExist):
-            return JsonResponse({'error': 'Neplatné datum nebo ID místnosti'}, status=400)
+            # Validace data
+            reservation_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+            
+            # Kontrola, že datum není v minulosti
+            if reservation_date < date.today():
+                return JsonResponse({
+                    'available_slots': [],
+                    'message': _('Nelze rezervovat minulé datum')
+                })
+                
+            # Validace ID místnosti
+            try:
+                room = EscapeRoom.objects.get(pk=room_id)
+            except EscapeRoom.DoesNotExist:
+                return JsonResponse({
+                    'error': _('Místnost neexistuje')
+                }, status=404)
+                
+        except ValueError:
+            return JsonResponse({
+                'error': _('Neplatné datum nebo ID místnosti')
+            }, status=400)
 
+        # Definice všech možných časů
         all_slots = ["10:00", "12:00", "14:00", "16:00", "18:00", "20:00"]
-        booked_slots = Rezervace.objects.filter(
+        
+        # Načtení obsazených slotů
+        booked_reservations = Rezervace.objects.filter(
             escape_room=room,
-            datum_rezervace=date
+            datum_rezervace=reservation_date
         ).values_list('cas_rezervace', flat=True)
-        booked = [slot.strftime('%H:%M') for slot in booked_slots]
-        available = [slot for slot in all_slots if slot not in booked]
-        return JsonResponse({'available_slots': available})
+        
+        # Převod na string formát
+        booked_slots = [slot.strftime('%H:%M') for slot in booked_reservations]
+        
+        # Výpočet dostupných slotů
+        available_slots = [slot for slot in all_slots if slot not in booked_slots]
+        
+        # Pro současný den: odebrat časy, které už prošly
+        if reservation_date == date.today():
+            current_time = datetime.now().time()
+            available_slots = [
+                slot for slot in available_slots
+                if datetime.strptime(slot, '%H:%M').time() > current_time
+            ]
+        
+        logger.debug(f"Dostupné sloty pro {room.nazev} na {reservation_date}: {available_slots}")
+        
+        return JsonResponse({
+            'available_slots': available_slots,
+            'total_slots': len(all_slots),
+            'booked_slots': len(booked_slots),
+            'room_name': room.nazev
+        })
 
 
-# Helper aliases for urls
+# Helper aliases pro urls
 home = HomeView.as_view()
 about = AboutView.as_view()
 kontact = KontactView.as_view()

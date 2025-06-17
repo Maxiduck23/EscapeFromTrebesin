@@ -1,33 +1,32 @@
-    
     .booking-page {
         background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
         min-height: 100vh;
         padding: 60px 0;
     }
-    
+
     .booking-container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 20px;
     }
-    
+
     .booking-header {
         text-align: center;
         margin-bottom: 60px;
     }
-    
+
     .booking-header h1 {
         color: #e63946;
         margin-bottom: 20px;
         animation: fadeInUp 0.8s ease-out;
     }
-    
+
     .booking-header p {
         font-size: 1.2rem;
         color: #ccc;
         animation: fadeInUp 0.8s ease-out 0.2s both;
     }
-    
+
     /* Booking Form Container */
     .booking-form-container {
         background: linear-gradient(145deg, #131313, #1a1a1a);
@@ -37,27 +36,27 @@
         overflow: hidden;
         animation: fadeInUp 0.8s ease-out 0.4s both;
     }
-    
+
     /* Progress Bar */
     .booking-progress {
         background: #0a0a0a;
         padding: 30px 40px;
         border-bottom: 1px solid rgba(230, 57, 70, 0.2);
     }
-    
+
     .progress-steps {
         display: flex;
         justify-content: space-between;
         max-width: 600px;
         margin: 0 auto;
     }
-    
+
     .progress-step {
         flex: 1;
         text-align: center;
         position: relative;
     }
-    
+
     .progress-step:not(:last-child)::after {
         content: '';
         position: absolute;
@@ -68,11 +67,11 @@
         background: #333;
         z-index: 1;
     }
-    
+
     .progress-step.active::after {
         background: #e63946;
     }
-    
+
     .step-number {
         width: 40px;
         height: 40px;
@@ -87,41 +86,41 @@
         z-index: 2;
         transition: all 0.3s ease;
     }
-    
+
     .progress-step.active .step-number,
     .progress-step.completed .step-number {
         background: #e63946;
         color: #fff;
         box-shadow: 0 0 20px rgba(230, 57, 70, 0.5);
     }
-    
+
     .progress-step.completed .step-number::after {
         content: '✓';
         position: absolute;
         font-size: 1.2rem;
     }
-    
+
     .progress-step.completed .step-number span {
         display: none;
     }
-    
+
     .step-label {
         font-size: 0.9rem;
         color: #777;
         transition: color 0.3s ease;
     }
-    
+
     .progress-step.active .step-label,
     .progress-step.completed .step-label {
         color: #f0f0f0;
     }
-    
+
     /* Booking Content */
     .booking-content {
         padding: 50px;
         position: relative;
     }
-    
+
     /* Step 1: Room Selection */
     .room-selection {
         display: grid;
@@ -129,7 +128,7 @@
         gap: 30px;
         margin-bottom: 40px;
     }
-    
+
     .room-option {
         background: rgba(230, 57, 70, 0.05);
         border: 2px solid transparent;
@@ -140,19 +139,19 @@
         position: relative;
         overflow: hidden;
     }
-    
+
     .room-option:hover {
         border-color: rgba(230, 57, 70, 0.3);
         transform: translateY(-5px);
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
-    
+
     .room-option.selected {
         border-color: #e63946;
         background: rgba(230, 57, 70, 0.1);
         box-shadow: 0 0 30px rgba(230, 57, 70, 0.3);
     }
-    
+
     .room-option.selected::after {
         content: '✓';
         position: absolute;
@@ -169,7 +168,7 @@
         font-size: 1.2rem;
         animation: scaleIn 0.3s ease;
     }
-    
+
     .room-image {
         height: 150px;
         background-size: cover;
@@ -177,49 +176,49 @@
         border-radius: 10px;
         margin-bottom: 20px;
     }
-    
+
     .room-name {
         font-size: 1.3rem;
         color: #e63946;
         margin-bottom: 10px;
         font-weight: bold;
     }
-    
+
     .room-info {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 15px;
     }
-    
+
     .room-difficulty {
         display: flex;
         gap: 3px;
     }
-    
+
     .difficulty-dot {
         width: 8px;
         height: 8px;
         background: #333;
         border-radius: 50%;
     }
-    
+
     .difficulty-dot.active {
         background: #e63946;
     }
-    
+
     .room-price {
         font-size: 1.2rem;
         color: #f0f0f0;
         font-weight: bold;
     }
-    
+
     .room-features {
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
     }
-    
+
     .room-feature {
         font-size: 0.85rem;
         color: #999;
@@ -227,7 +226,7 @@
         align-items: center;
         gap: 5px;
     }
-    
+
     /* Step 2: Date Selection */
     .date-selection {
         display: grid;
@@ -235,32 +234,32 @@
         gap: 40px;
         margin-bottom: 40px;
     }
-    
+
     .calendar-container {
         background: rgba(230, 57, 70, 0.05);
         border-radius: 15px;
         padding: 30px;
         border: 1px solid rgba(230, 57, 70, 0.2);
     }
-    
+
     .calendar-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
     }
-    
+
     .calendar-title {
         font-size: 1.3rem;
         color: #e63946;
         font-weight: bold;
     }
-    
+
     .calendar-nav {
         display: flex;
         gap: 10px;
     }
-    
+
     .calendar-nav button {
         background: rgba(230, 57, 70, 0.2);
         color: #e63946;
@@ -272,18 +271,18 @@
         transition: all 0.3s ease;
         font-size: 1.2rem;
     }
-    
+
     .calendar-nav button:hover {
         background: #e63946;
         color: #fff;
     }
-    
+
     .calendar-grid {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         gap: 10px;
     }
-    
+
     .day-label {
         text-align: center;
         font-weight: bold;
@@ -291,7 +290,7 @@
         font-size: 0.9rem;
         padding: 10px 0;
     }
-    
+
     .calendar-day {
         aspect-ratio: 1;
         display: flex;
@@ -304,28 +303,28 @@
         font-weight: 500;
         position: relative;
     }
-    
+
     .calendar-day:hover:not(.disabled) {
         background: rgba(230, 57, 70, 0.2);
         transform: scale(1.1);
     }
-    
+
     .calendar-day.selected {
         background: #e63946;
         color: #fff;
         box-shadow: 0 0 20px rgba(230, 57, 70, 0.5);
     }
-    
+
     .calendar-day.disabled {
         color: #444;
         cursor: not-allowed;
         opacity: 0.5;
     }
-    
+
     .calendar-day.today {
         border: 2px solid #e63946;
     }
-    
+
     /* Time Slots */
     .time-slots-container {
         background: rgba(230, 57, 70, 0.05);
@@ -333,20 +332,20 @@
         padding: 30px;
         border: 1px solid rgba(230, 57, 70, 0.2);
     }
-    
+
     .time-slots-header {
         font-size: 1.3rem;
         color: #e63946;
         margin-bottom: 20px;
         font-weight: bold;
     }
-    
+
     .time-slots-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 15px;
     }
-    
+
     .time-slot {
         padding: 15px;
         background: rgba(255, 255, 255, 0.05);
@@ -357,47 +356,47 @@
         transition: all 0.3s ease;
         font-weight: 500;
     }
-    
+
     .time-slot:hover:not(.disabled) {
         border-color: rgba(230, 57, 70, 0.5);
         background: rgba(230, 57, 70, 0.1);
         transform: translateY(-3px);
     }
-    
+
     .time-slot.selected {
         background: #e63946;
         color: #fff;
         border-color: #e63946;
         box-shadow: 0 5px 20px rgba(230, 57, 70, 0.4);
     }
-    
+
     .time-slot.disabled {
         opacity: 0.4;
         cursor: not-allowed;
         text-decoration: line-through;
     }
-    
+
     /* Step 3: Personal Information */
     .personal-info-form {
         max-width: 600px;
         margin: 0 auto;
     }
-    
+
     .form-group {
         margin-bottom: 25px;
     }
-    
+
     .form-group label {
         display: block;
         margin-bottom: 10px;
         color: #f0f0f0;
         font-weight: 500;
     }
-    
+
     .form-group label span {
         color: #e63946;
     }
-    
+
     .form-control {
         width: 100%;
         padding: 15px;
@@ -408,34 +407,35 @@
         font-size: 1rem;
         transition: all 0.3s ease;
     }
-    
+
     .form-control:focus {
         outline: none;
         border-color: #e63946;
         background: rgba(230, 57, 70, 0.05);
         box-shadow: 0 0 20px rgba(230, 57, 70, 0.2);
     }
-    
+
     .form-control::placeholder {
         color: #777;
     }
-    
+
     /* Fix select options contrast */
     #players {
         background: #fff;
         color: #000;
     }
+
     #players option {
         background: #fff;
         color: #000;
     }
-    
+
     .form-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
     }
-    
+
     .form-note {
         background: rgba(230, 57, 70, 0.1);
         border-left: 4px solid #e63946;
@@ -445,7 +445,7 @@
         color: #ccc;
         font-size: 0.95rem;
     }
-    
+
     /* Summary Section */
     .booking-summary {
         background: linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, rgba(19, 19, 19, 0.8) 100%);
@@ -454,14 +454,14 @@
         margin-top: 40px;
         border: 1px solid rgba(230, 57, 70, 0.3);
     }
-    
+
     .summary-title {
         font-size: 1.5rem;
         color: #e63946;
         margin-bottom: 20px;
         text-align: center;
     }
-    
+
     .summary-item {
         display: flex;
         justify-content: space-between;
@@ -469,30 +469,30 @@
         padding: 15px 0;
         border-bottom: 1px solid rgba(230, 57, 70, 0.2);
     }
-    
+
     .summary-item:last-child {
         border-bottom: none;
         font-size: 1.2rem;
         font-weight: bold;
         color: #e63946;
     }
-    
+
     .summary-label {
         color: #ccc;
     }
-    
+
     .summary-value {
         color: #f0f0f0;
         font-weight: 500;
     }
-    
+
     /* Navigation Buttons */
     .booking-navigation {
         display: flex;
         justify-content: space-between;
         margin-top: 20px;
     }
-    
+
     .nav-btn {
         padding: 15px 40px;
         border-radius: 50px;
@@ -502,60 +502,60 @@
         transition: all 0.3s ease;
         font-size: 1.1rem;
     }
-    
+
     .btn-back {
         background: transparent;
         color: #e63946;
         border: 2px solid #e63946;
     }
-    
+
     .btn-back:hover {
         background: rgba(230, 57, 70, 0.1);
         transform: translateY(-3px);
     }
-    
+
     .btn-next {
         background: linear-gradient(45deg, #e63946, #c1121f);
         color: #fff;
         box-shadow: 0 5px 20px rgba(230, 57, 70, 0.3);
     }
-    
+
     .btn-next:hover {
         transform: translateY(-3px);
         box-shadow: 0 8px 30px rgba(230, 57, 70, 0.5);
     }
-    
+
     .btn-next:disabled {
         opacity: 0.5;
         cursor: not-allowed;
     }
-    
+
     /* Success Message */
     .booking-success {
         text-align: center;
         padding: 60px;
     }
-    
+
     .success-icon {
         font-size: 5rem;
         color: #2ecc71;
         margin-bottom: 30px;
         animation: scaleIn 0.5s ease;
     }
-    
+
     .success-message {
         font-size: 2rem;
         color: #f0f0f0;
         margin-bottom: 20px;
     }
-    
+
     .success-details {
         font-size: 1.1rem;
         color: #ccc;
         margin-bottom: 40px;
         line-height: 1.8;
     }
-    
+
     .success-code {
         background: rgba(46, 204, 113, 0.1);
         border: 2px solid #2ecc71;
@@ -567,28 +567,30 @@
         letter-spacing: 2px;
         margin-bottom: 40px;
     }
-    
+
     /* Animations */
     @keyframes fadeInUp {
         from {
             opacity: 0;
             transform: translateY(30px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
         }
     }
-    
+
     @keyframes scaleIn {
         from {
             transform: scale(0);
         }
+
         to {
             transform: scale(1);
         }
     }
-    
+
     /* Loading State */
     .loading-overlay {
         position: fixed;
@@ -602,11 +604,11 @@
         justify-content: center;
         z-index: 9999;
     }
-    
+
     .loading-overlay.active {
         display: flex;
     }
-    
+
     .loading-spinner {
         width: 60px;
         height: 60px;
@@ -615,42 +617,363 @@
         border-radius: 50%;
         animation: spin 1s linear infinite;
     }
-    
+
     @keyframes spin {
-        to { transform: rotate(360deg); }
+        to {
+            transform: rotate(360deg);
+        }
     }
-    
+
     /* Responsive Design */
     @media (max-width: 768px) {
         .booking-content {
             padding: 30px 20px;
         }
-        
+
         .room-selection {
             grid-template-columns: 1fr;
         }
-        
+
         .date-selection {
             grid-template-columns: 1fr;
         }
-        
+
         .time-slots-grid {
             grid-template-columns: repeat(2, 1fr);
         }
-        
+
         .form-row {
             grid-template-columns: 1fr;
         }
-        
+
         .progress-step .step-label {
             font-size: 0.8rem;
         }
-        
+
         .booking-navigation {
             flex-direction: column;
         }
-        
+
         .btn-back {
             order: 2;
+        }
+    }
+
+    /* =========================
+   VYLEPŠENÉ KALENDÁŘOVÉ STYLY
+   ========================= */
+
+    .calendar-day {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        border: 2px solid transparent;
+        position: relative;
+    }
+
+    .calendar-day:not(.disabled):not(.empty) {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: #f0f0f0;
+    }
+
+    .calendar-day:not(.disabled):not(.empty):hover {
+        background-color: #e63946 !important;
+        color: #fff !important;
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+    }
+
+    .calendar-day.selected {
+        background-color: #e63946 !important;
+        color: #fff !important;
+        border-color: #c1121f;
+        box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.3);
+    }
+
+    .calendar-day.today {
+        border-color: #e63946;
+        font-weight: bold;
+    }
+
+    .calendar-day.today::after {
+        content: '';
+        position: absolute;
+        bottom: 2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 4px;
+        background-color: #e63946;
+        border-radius: 50%;
+    }
+
+    .calendar-day.disabled {
+        background-color: rgba(255, 255, 255, 0.02) !important;
+        color: #666 !important;
+        cursor: not-allowed !important;
+        opacity: 0.5;
+    }
+
+    .calendar-day.empty {
+        cursor: default;
+        pointer-events: none;
+    }
+
+    /* =========================
+   VYLEPŠENÉ TIME SLOT STYLY
+   ========================= */
+
+    .time-slot {
+        padding: 12px 20px;
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 2px solid transparent;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        color: #f0f0f0;
+    }
+
+    .time-slot:not(.disabled):hover {
+        background-color: #e63946 !important;
+        color: #fff !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+    }
+
+    .time-slot.selected {
+        background-color: #e63946 !important;
+        color: #fff !important;
+        border-color: #c1121f;
+        box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.3);
+    }
+
+    .time-slot.disabled {
+        background-color: rgba(255, 255, 255, 0.02) !important;
+        color: #666 !important;
+        cursor: not-allowed !important;
+        opacity: 0.5;
+        position: relative;
+    }
+
+    .time-slot.disabled::after {
+        content: 'Obsazeno';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 0.8rem;
+        color: #999;
+    }
+
+    /* =========================
+   NOTIFIKAČNÍ SYSTÉM
+   ========================= */
+
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        max-width: 400px;
+        padding: 0;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        transform: translateX(120%);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        opacity: 0;
+    }
+
+    .notification.show {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    .notification.success {
+        background: linear-gradient(135deg, rgba(46, 204, 113, 0.95) 0%, rgba(39, 174, 96, 0.95) 100%);
+        border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+
+    .notification.error {
+        background: linear-gradient(135deg, rgba(231, 76, 60, 0.95) 0%, rgba(192, 57, 43, 0.95) 100%);
+        border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+
+    .notification-content {
+        display: flex;
+        align-items: center;
+        padding: 16px 20px;
+        color: #fff;
+    }
+
+    .notification-icon {
+        font-size: 1.5rem;
+        margin-right: 12px;
+        font-weight: bold;
+    }
+
+    .notification-message {
+        flex: 1;
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+
+    /* =========================
+   LOADING OVERLAY VYLEPŠENÍ
+   ========================= */
+
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(5px);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .loading-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .loading-spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(230, 57, 70, 0.2);
+        border-top: 4px solid #e63946;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* =========================
+   RESPONSIVNÍ VYLEPŠENÍ
+   ========================= */
+
+    @media (max-width: 768px) {
+        .calendar-day {
+            width: 35px;
+            height: 35px;
+            font-size: 0.9rem;
+        }
+
+        .time-slot {
+            padding: 10px 15px;
+            font-size: 0.9rem;
+        }
+
+        .notification {
+            top: 10px;
+            right: 10px;
+            left: 10px;
+            max-width: none;
+        }
+
+        .notification-content {
+            padding: 14px 16px;
+        }
+
+        .notification-message {
+            font-size: 0.9rem;
+        }
+    }
+
+    /* =========================
+   ANIMACE PRO LEPŠÍ UX
+   ========================= */
+
+    @keyframes slideInFromRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeInScale {
+        from {
+            transform: scale(0.8);
+            opacity: 0;
+        }
+
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .booking-step {
+        animation: fadeInScale 0.4s ease-out;
+    }
+
+    /* =========================
+   DEBUG STYLY (odebrat v produkci)
+   ========================= */
+
+    .debug-info {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        font-family: monospace;
+        font-size: 0.8rem;
+        z-index: 1000;
+        display: none;
+        /* Zapnout pro debug */
+    }
+
+    /* =========================
+   PŘÍSTUPNOST
+   ========================= */
+
+    .calendar-day:focus,
+    .time-slot:focus {
+        outline: 2px solid #e63946;
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+        .calendar-day,
+        .time-slot,
+        .notification {
+            transition: none;
+        }
+
+        .loading-spinner {
+            animation: none;
+            border: 4px solid #e63946;
         }
     }
