@@ -1,4 +1,4 @@
-// Laboratory room specific interactions
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const equipmentItems = document.querySelectorAll('.equipment-item');

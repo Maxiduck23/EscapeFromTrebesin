@@ -1,35 +1,4 @@
-// KOMPLETNÍ OPRAVENÝ booking.js
-// Oprava problému s ukládáním data o den dříve
-
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('🚀 Loading booking.js...');
-
-    // =====================================================================
-    // HELPER FUNKCE PRO PRÁCI S DATY - OPRAVENO
-    // =====================================================================
-
-    /**
-     * Vytvoří string ve formátu YYYY-MM-DD bez použití Date objektu
-     * Tím se vyhneme timezone problémům
-     */
-    function formatDateForServer(year, month, day) {
-        const monthStr = String(month + 1).padStart(2, '0'); // month je 0-based
-        const dayStr = String(day).padStart(2, '0');
-        const result = `${year}-${monthStr}-${dayStr}`;
-        console.log(`📅 formatDateForServer(${year}, ${month}, ${day}) => "${result}"`);
-        return result;
-    }
-
-    /**
-     * Vytvoří Date objekt bezpečně pro porovnání
-     */
-    function createSafeDate(year, month, day) {
-        return new Date(year, month, day);
-    }
-
-    /**
-     * Získá CSRF token z cookies
-     */
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -45,47 +14,26 @@ document.addEventListener('DOMContentLoaded', function () {
         return cookieValue;
     }
 
-    /**
-     * Debug funkce pro logování dat
-     */
-    function debugDate(label, dateValue, extra = {}) {
-        if (!window.bookingConfig?.debug) return;
-
-        console.log(`🔍 ${label}:`);
-        if (typeof dateValue === 'string') {
-            console.log(`   String: "${dateValue}"`);
-        } else if (dateValue instanceof Date) {
-            console.log(`   Date object: ${dateValue}`);
-            console.log(`   ISO: ${dateValue.toISOString()}`);
-            console.log(`   Local: ${dateValue.toLocaleDateString('cs-CZ')}`);
-        }
-        if (Object.keys(extra).length > 0) {
-            console.log(`   Extra:`, extra);
-        }
-        console.log('---');
+    
+    function formatDateLocal(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 
-    // =====================================================================
-    // STAV APLIKACE
-    // =====================================================================
-
+    
     let bookingState = {
         currentStep: 1,
         selectedRoom: null,
-        selectedDate: null, // Bude ve formátu YYYY-MM-DD
+        selectedDate: null,
         selectedTime: null,
         personalInfo: {},
         roomPrice: 0,
         roomName: ''
     };
 
-    // Expose pro debugging
-    window.bookingState = bookingState;
-
-    // =====================================================================
-    // DOM ELEMENTY
-    // =====================================================================
-
+    
     const steps = document.querySelectorAll('.booking-step');
     const progressSteps = document.querySelectorAll('.progress-step');
     const btnNext = document.getElementById('btn-next');
@@ -93,26 +41,55 @@ document.addEventListener('DOMContentLoaded', function () {
     const bookingSummary = document.getElementById('booking-summary');
     const loadingOverlay = document.getElementById('loading-overlay');
 
-    // =====================================================================
-    // KALENDÁŘ - OPRAVENO
-    // =====================================================================
+    
+    const roomOptions = document.querySelectorAll('.room-option');
+    roomOptions.forEach(option => {
+        option.addEventListener('click', function () {
+            roomOptions.forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
 
+            bookingState.selectedRoom = this.dataset.roomId;
+            bookingState.roomPrice = parseInt(this.dataset.price);
+            bookingState.roomName = this.querySelector('.room-name').textContent;
+
+            
+            bookingState.selectedDate = null;
+            bookingState.selectedTime = null;
+            document.getElementById('summary-date').textContent = '-';
+            document.getElementById('summary-time').textContent = '-';
+            document.querySelectorAll('.calendar-day.selected').forEach(d => d.classList.remove('selected'));
+            document.querySelectorAll('.time-slot.selected').forEach(t => t.classList.remove('selected'));
+            const timeSlotsContainer = document.getElementById('time-slots');
+            if (timeSlotsContainer) {
+                timeSlotsContainer.innerHTML = '';
+            }
+
+            
+            document.getElementById('summary-room').textContent = bookingState.roomName;
+            document.getElementById('summary-price').textContent = bookingState.roomPrice + ' Kč';
+
+            
+            btnNext.disabled = false;
+        });
+    });
+
+    
     let currentMonth = new Date();
 
     function generateCalendar() {
-        console.log('📅 Generating calendar for:', currentMonth);
+        console.log('Generuji kalendář pro:', currentMonth);
 
         const calendarGrid = document.getElementById('calendar-grid');
         const calendarTitle = document.getElementById('calendar-title');
 
         if (!calendarGrid || !calendarTitle) {
-            console.error('❌ Calendar elements not found');
+            console.error('Kalendářové elementy nenalezeny!');
             return;
         }
 
         calendarGrid.innerHTML = '';
 
-        // Vytvoření hlavičky s dny v týdnu
+        
         const dayLabels = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
         dayLabels.forEach(day => {
             const label = document.createElement('div');
@@ -121,100 +98,82 @@ document.addEventListener('DOMContentLoaded', function () {
             calendarGrid.appendChild(label);
         });
 
-        // Získání informací o měsíci
-        const year = currentMonth.getFullYear();
-        const month = currentMonth.getMonth(); // 0-based
-        const firstDay = new Date(year, month, 1);
-        const lastDay = new Date(year, month + 1, 0);
+        const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+        const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
 
         const monthNames = [
             'Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen',
             'Červenec', 'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec'
         ];
+        calendarTitle.textContent = `${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`;
 
-        calendarTitle.textContent = `${monthNames[month]} ${year}`;
-
-        // Výpočet prvního dne v týdnu (pondělí = 0)
+        
         let startDay = firstDay.getDay();
-        startDay = (startDay === 0) ? 6 : startDay - 1; // Neděle = 6
+        startDay = (startDay === 0) ? 6 : startDay - 1; 
 
-        // Prázdné dny na začátku
+        
         for (let i = 0; i < startDay; i++) {
             const emptyDay = document.createElement('div');
             emptyDay.className = 'calendar-day empty';
             calendarGrid.appendChild(emptyDay);
         }
 
-        // Dnešní datum pro porovnání
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // Generování dnů v měsíci
+        
         for (let day = 1; day <= lastDay.getDate(); day++) {
             const dayElement = document.createElement('div');
             dayElement.className = 'calendar-day';
             dayElement.textContent = day;
 
-            // KRITICKÉ: Vytvoření data pro porovnání
-            const currentDate = createSafeDate(year, month, day);
+            const currentDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
 
-            // Kontrola, jestli je den v minulosti
             if (currentDate < today) {
                 dayElement.classList.add('disabled');
+                dayElement.title = 'Nelze rezervovat minulé datum';
             } else {
-                // OPRAVENO: Ukládání komponent data místo formatted stringu
-                dayElement.dataset.year = year;
-                dayElement.dataset.month = month; // 0-based
-                dayElement.dataset.day = day;
+                
+                dayElement.dataset.date = formatDateLocal(currentDate);
 
-                // Pro server použijeme dedicated funkci
-                const serverDate = formatDateForServer(year, month, day);
-                dayElement.dataset.serverDate = serverDate;
-
-                debugDate(`Calendar day ${day}`, currentDate, {
-                    year: year,
-                    month: month,
-                    day: day,
-                    serverDate: serverDate
-                });
-
-                // Event listener pro klik na datum
                 dayElement.addEventListener('click', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
 
-                    if (this.classList.contains('disabled')) return;
+                    console.log('Klik na datum:', this.dataset.date);
 
-                    console.log('🖱️ DATE CLICKED');
-                    console.log(`   Day: ${day}`);
-                    console.log(`   Year: ${this.dataset.year}`);
-                    console.log(`   Month: ${this.dataset.month}`);
-                    console.log(`   Server date: ${this.dataset.serverDate}`);
+                    document.querySelectorAll('.calendar-day.selected').forEach(d => d.classList.remove('selected'));
 
-                    // Odstranění předchozího výběru
-                    document.querySelectorAll('.calendar-day.selected').forEach(d =>
-                        d.classList.remove('selected')
-                    );
                     this.classList.add('selected');
-
-                    // OPRAVENO: Použití server date formátu
-                    bookingState.selectedDate = this.dataset.serverDate;
+                    
+                    const [year, month, day] = this.dataset.date.split('-');
+                    bookingState.selectedDate = new Date(year, month - 1, day);
                     bookingState.selectedTime = null;
 
-                    // Aktualizace UI
-                    const dateStr = `${day}. ${monthNames[month]} ${year}`;
+                    const dateStr = `${day}. ${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`;
                     document.getElementById('summary-date').textContent = dateStr;
                     document.getElementById('summary-time').textContent = '-';
 
-                    console.log(`✅ Selected date stored: "${bookingState.selectedDate}"`);
-
-                    // Reset time slots a načtení nových
                     updateTimeSlots();
                     checkStep2Completion();
                 });
+
+                dayElement.addEventListener('mouseenter', function () {
+                    if (!this.classList.contains('disabled')) {
+                        this.style.backgroundColor = '#e63946';
+                        this.style.color = '#fff';
+                    }
+                });
+
+                dayElement.addEventListener('mouseleave', function () {
+                    if (!this.classList.contains('selected')) {
+                        this.style.backgroundColor = '';
+                        this.style.color = '';
+                    }
+                });
             }
 
-            // Zvýraznění dnešního dne
+            
             if (currentDate.toDateString() === today.toDateString()) {
                 dayElement.classList.add('today');
             }
@@ -222,15 +181,16 @@ document.addEventListener('DOMContentLoaded', function () {
             calendarGrid.appendChild(dayElement);
         }
 
-        console.log('✅ Calendar generated successfully');
+        console.log('Kalendář vygenerován');
     }
 
-    // Navigace kalendáře
-    document.getElementById('prev-month')?.addEventListener('click', function () {
-        console.log('⬅️ Previous month');
+    
+    document.getElementById('prev-month').addEventListener('click', function () {
+        console.log('Předchozí měsíc');
         currentMonth.setMonth(currentMonth.getMonth() - 1);
         generateCalendar();
-        // Reset výběru při změně měsíce
+
+        
         bookingState.selectedDate = null;
         bookingState.selectedTime = null;
         document.getElementById('summary-date').textContent = '-';
@@ -238,11 +198,12 @@ document.addEventListener('DOMContentLoaded', function () {
         checkStep2Completion();
     });
 
-    document.getElementById('next-month')?.addEventListener('click', function () {
-        console.log('➡️ Next month');
+    document.getElementById('next-month').addEventListener('click', function () {
+        console.log('Další měsíc');
         currentMonth.setMonth(currentMonth.getMonth() + 1);
         generateCalendar();
-        // Reset výběru při změně měsíce
+
+        
         bookingState.selectedDate = null;
         bookingState.selectedTime = null;
         document.getElementById('summary-date').textContent = '-';
@@ -250,80 +211,36 @@ document.addEventListener('DOMContentLoaded', function () {
         checkStep2Completion();
     });
 
-    // =====================================================================
-    // VÝBĚR MÍSTNOSTI
-    // =====================================================================
-
-    const roomOptions = document.querySelectorAll('.room-option');
-    roomOptions.forEach(option => {
-        option.addEventListener('click', function () {
-            console.log('🏠 Room selected:', this.dataset.roomId);
-
-            // Odstranění předchozího výběru
-            roomOptions.forEach(opt => opt.classList.remove('selected'));
-            this.classList.add('selected');
-
-            // Uložení výběru
-            bookingState.selectedRoom = this.dataset.roomId;
-            bookingState.roomPrice = parseInt(this.dataset.price);
-            bookingState.roomName = this.querySelector('.room-name').textContent;
-
-            // Reset date/time při změně místnosti
-            bookingState.selectedDate = null;
-            bookingState.selectedTime = null;
-
-            // Aktualizace UI
-            document.getElementById('summary-room').textContent = bookingState.roomName;
-            document.getElementById('summary-price').textContent = bookingState.roomPrice + ' Kč';
-            document.getElementById('summary-date').textContent = '-';
-            document.getElementById('summary-time').textContent = '-';
-
-            // Povolení pokračování
-            btnNext.disabled = false;
-
-            console.log('✅ Room selection saved:', {
-                id: bookingState.selectedRoom,
-                name: bookingState.roomName,
-                price: bookingState.roomPrice
-            });
-        });
-    });
-
-    // =====================================================================
-    // ČASOVÉ SLOTY
-    // =====================================================================
-
+    
     function updateTimeSlots() {
-        console.log('⏰ Updating time slots...');
-
         if (!bookingState.selectedRoom || !bookingState.selectedDate) {
-            console.log('❌ Missing room or date for time slots');
+            console.log('Chybí místnost nebo datum pro načtení časů');
             return;
         }
 
         const timeSlotsContainer = document.getElementById('time-slots');
         if (!timeSlotsContainer) {
-            console.error('❌ Time slots container not found');
+            console.error('Time slots container not found!');
             return;
         }
+        timeSlotsContainer.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">Načítání volných termínů...</p>';
 
-        // Loading state
-        timeSlotsContainer.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">Načítání dostupných časů...</p>';
+        
+        const dateStr = formatDateLocal(bookingState.selectedDate);
 
-        const dateStr = bookingState.selectedDate;
-        const roomId = bookingState.selectedRoom;
-        const url = `${window.bookingConfig?.urls?.getAvailableSlots || '/booking/ajax/get_available_slots/'}?date=${encodeURIComponent(dateStr)}&room_id=${encodeURIComponent(roomId)}`;
+        if (!window.bookingUrls || !window.bookingUrls.getAvailableSlots) {
+            console.error('Booking URLs not available!');
+            timeSlotsContainer.innerHTML = '<p style="text-align:center; grid-column: 1 / -1; color: #e63946;">Chyba konfigurace. Obnovte stránku.</p>';
+            return;
+        }
+        const url = `${window.bookingUrls.getAvailableSlots}?date=${dateStr}&room_id=${bookingState.selectedRoom}`;
 
-        console.log('🌐 AJAX REQUEST for time slots');
-        console.log(`   URL: ${url}`);
-        console.log(`   Date: "${dateStr}"`);
-        console.log(`   Room ID: ${roomId}`);
+        console.log('Načítám dostupné časy:', url);
 
         fetch(url, {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json'
             }
         })
             .then(response => {
@@ -333,299 +250,258 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                console.log('📥 Time slots response:', data);
-
+                console.log('Dostupné časy:', data);
                 timeSlotsContainer.innerHTML = '';
-
-                if (data.error) {
-                    timeSlotsContainer.innerHTML = `<p style="color: red; text-align: center; grid-column: 1 / -1;">${data.error}</p>`;
-                    return;
-                }
-
                 const allSlots = ["10:00", "12:00", "14:00", "16:00", "18:00", "20:00"];
-                const availableSlots = data.available_slots || [];
+                allSlots.forEach(time => {
+                    const slotEl = document.createElement('div');
+                    slotEl.className = 'time-slot';
+                    slotEl.dataset.time = time;
+                    slotEl.textContent = time;
 
-                allSlots.forEach(timeSlot => {
-                    const slotElement = document.createElement('div');
-                    slotElement.className = 'time-slot';
-                    slotElement.dataset.time = timeSlot;
-                    slotElement.textContent = timeSlot;
-                    slotElement.setAttribute('role', 'button');
-                    slotElement.setAttribute('tabindex', '0');
-
-                    if (!availableSlots.includes(timeSlot)) {
-                        slotElement.classList.add('disabled');
-                        slotElement.setAttribute('aria-disabled', 'true');
+                    if (!data.available_slots || !data.available_slots.includes(time)) {
+                        slotEl.classList.add('disabled');
+                        slotEl.title = 'Termín je obsazený';
                     } else {
-                        slotElement.addEventListener('click', function (e) {
+                        slotEl.addEventListener('click', function (e) {
                             e.preventDefault();
+                            e.stopPropagation();
                             if (this.classList.contains('disabled')) return;
-
-                            console.log('⏰ Time selected:', timeSlot);
-
-                            // Odstranění předchozího výběru
-                            document.querySelectorAll('.time-slot.selected').forEach(s =>
-                                s.classList.remove('selected')
-                            );
+                            console.log('Vybran čas:', time);
+                            document.querySelectorAll('.time-slot.selected').forEach(s => s.classList.remove('selected'));
                             this.classList.add('selected');
-
-                            // Uložení výběru
                             bookingState.selectedTime = this.dataset.time;
                             document.getElementById('summary-time').textContent = bookingState.selectedTime;
-
-                            console.log('✅ Time selection saved:', bookingState.selectedTime);
-
                             checkStep2Completion();
                         });
-
-                        // Keyboard support
-                        slotElement.addEventListener('keypress', function (e) {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                                e.preventDefault();
-                                this.click();
-                            }
-                        });
                     }
-
-                    timeSlotsContainer.appendChild(slotElement);
+                    timeSlotsContainer.appendChild(slotEl);
                 });
-
-                console.log(`✅ Time slots rendered: ${availableSlots.length}/${allSlots.length} available`);
             })
             .catch(error => {
-                console.error('❌ Time slots error:', error);
-                timeSlotsContainer.innerHTML = `<p style="color: red; text-align: center; grid-column: 1 / -1;">Chyba při načítání časů: ${error.message}</p>`;
+                console.error('Chyba při načítání časových slotů:', error);
+                timeSlotsContainer.innerHTML = '<p style="text-align:center; grid-column: 1 / -1; color: #e63946;">Chyba při načítání. Zkuste to znovu.</p>';
             });
     }
 
+    
     function checkStep2Completion() {
-        const canProceed = bookingState.selectedDate && bookingState.selectedTime;
-        btnNext.disabled = !canProceed;
-
-        console.log('🔍 Step 2 completion check:', {
-            hasDate: !!bookingState.selectedDate,
-            hasTime: !!bookingState.selectedTime,
-            canProceed: canProceed
-        });
+        if (bookingState.selectedDate && bookingState.selectedTime) {
+            btnNext.disabled = false;
+            console.log('Krok 2 dokončen');
+        } else {
+            btnNext.disabled = true;
+            console.log('Krok 2 nedokončen - datum:', bookingState.selectedDate, 'čas:', bookingState.selectedTime);
+        }
     }
 
-    // =====================================================================
-    // FORMULÁŘ - KROK 3
-    // =====================================================================
+    
+    const personalInfoForm = document.getElementById('personal-info-form');
+    const formInputs = personalInfoForm.querySelectorAll('input[required], select[required]');
+
+    formInputs.forEach(input => {
+        input.addEventListener('input', validateForm);
+        input.addEventListener('change', validateForm);
+    });
 
     function validateForm() {
-        const requiredFields = ['first-name', 'last-name', 'email', 'phone', 'players'];
-        const isValid = requiredFields.every(fieldId => {
-            const field = document.getElementById(fieldId);
-            const value = field?.value?.trim();
-            const valid = !!value;
-
-            // Visual feedback
-            if (field) {
-                field.classList.toggle('error', !valid);
+        let isValid = true;
+        formInputs.forEach(input => {
+            if (!input.value.trim()) {
+                isValid = false;
             }
-
-            return valid;
         });
 
         btnNext.disabled = !isValid;
 
-        console.log('📝 Form validation:', {
-            isValid: isValid,
-            fields: requiredFields.map(id => ({
-                id: id,
-                value: document.getElementById(id)?.value?.trim(),
-                valid: !!document.getElementById(id)?.value?.trim()
-            }))
-        });
-
-        return isValid;
+        const players = document.getElementById('players').value;
+        if (players) {
+            document.getElementById('summary-players').textContent = players;
+        }
     }
 
-    // Event listeners pro formulářová pole
-    ['first-name', 'last-name', 'email', 'phone', 'players'].forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (field) {
-            field.addEventListener('input', validateForm);
-            field.addEventListener('change', validateForm);
-            field.addEventListener('blur', validateForm);
+    
+    btnNext.addEventListener('click', function () {
+        if (bookingState.currentStep === 3) {
+            console.log('Odesílám rezervaci...');
+
+            const requiredFields = ['first-name', 'last-name', 'email', 'phone', 'players'];
+            let hasErrors = false;
+            const errors = {};
+
+            requiredFields.forEach(id => {
+                const field = document.getElementById(id);
+                if (!field || !field.value.trim()) {
+                    hasErrors = true;
+                    errors[id] = 'This field is required';
+                    if (field) field.classList.add('error');
+                } else if (field) {
+                    field.classList.remove('error');
+                }
+            });
+
+            if (hasErrors) {
+                showErrorMessage('Prosím vyplňte všechna povinná pole.');
+                return;
+            }
+
+            bookingState.personalInfo = {
+                firstName: document.getElementById('first-name').value.trim(),
+                lastName: document.getElementById('last-name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                players: document.getElementById('players').value,
+                notes: document.getElementById('notes').value.trim()
+            };
+
+            if (!bookingState.selectedRoom || !bookingState.selectedDate || !bookingState.selectedTime) {
+                showErrorMessage('Chybí údaje o rezervaci. Vraťte se zpět a zkontrolujte výběr.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('room', bookingState.selectedRoom);
+            
+            formData.append('date', formatDateLocal(bookingState.selectedDate));
+            formData.append('time', bookingState.selectedTime);
+            formData.append('jmeno', bookingState.personalInfo.firstName);
+            formData.append('prijmeni', bookingState.personalInfo.lastName);
+            formData.append('email', bookingState.personalInfo.email);
+            formData.append('telefon', bookingState.personalInfo.phone);
+            formData.append('pocet_hracu', bookingState.personalInfo.players);
+            formData.append('poznamky', bookingState.personalInfo.notes);
+
+            const csrfToken = getCookie('csrftoken') ||
+                (window.bookingUrls && window.bookingUrls.csrfToken) ||
+                document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+            if (!csrfToken) {
+                showErrorMessage('Chyba bezpečnostního tokenu. Obnovte prosím stránku.');
+                return;
+            }
+
+            loadingOverlay.classList.add('active');
+            btnNext.disabled = true;
+            const submitUrl = window.bookingUrls?.bookingSubmit || '/booking/';
+
+            
+            console.log('Odesílám data:', {
+                room: bookingState.selectedRoom,
+                date: formatDateLocal(bookingState.selectedDate),
+                time: bookingState.selectedTime,
+                originalDate: bookingState.selectedDate
+            });
+
+            fetch(submitUrl, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest',
+                }
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    return response.json();
+                })
+                .then(data => {
+                    loadingOverlay.classList.remove('active');
+                    console.log('Odpověď ze serveru:', data);
+                    if (data.success) {
+                        document.getElementById('booking-code').textContent = data.booking_code || 'EFT-XXXX';
+                        goToStep(4);
+                        showSuccessMessage(data.message || 'Rezervace byla úspěšně dokončena!');
+                    } else {
+                        console.error('Rezervace selhala:', data.errors);
+                        if (data.errors && typeof data.errors === 'object') {
+                            let msgs = [];
+                            Object.keys(data.errors).forEach(field => {
+                                const el = document.getElementById(field) || document.getElementById(field.replace('_', '-'));
+                                if (el) el.classList.add('error');
+                                if (Array.isArray(data.errors[field])) msgs.push(...data.errors[field]);
+                                else msgs.push(data.errors[field]);
+                            });
+                            showErrorMessage(msgs.join('<br>'));
+                        } else {
+                            showErrorMessage('Rezervace se nezdařila. Zkuste to prosím znovu.');
+                        }
+                        btnNext.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    loadingOverlay.classList.remove('active');
+                    console.error('Chyba při odesílání formuláře:', error);
+                    showErrorMessage(`Došlo k technické chybě: ${error.message}. Zkuste to prosím znovu později.`);
+                    btnNext.disabled = false;
+                });
+        } else {
+            goToStep(bookingState.currentStep + 1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     });
 
-    // =====================================================================
-    // ODESÍLÁNÍ REZERVACE
-    // =====================================================================
+    
+    function showSuccessMessage(message) {
+        const notification = document.createElement('div');
+        notification.className = 'notification success';
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span class="notification-icon">✓</span>
+                <span class="notification-message">${message}</span>
+            </div>
+        `;
+        document.body.appendChild(notification);
 
-    function submitBooking() {
-        console.log('🚀 SUBMITTING BOOKING');
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
 
-        // Validace před odesláním
-        if (!bookingState.selectedRoom || !bookingState.selectedDate || !bookingState.selectedTime) {
-            console.error('❌ Missing booking data');
-            alert('Chybí data rezervace. Zkuste to znovu.');
-            return;
-        }
-
-        if (!validateForm()) {
-            console.error('❌ Form validation failed');
-            alert('Prosím, vyplňte všechna povinná pole.');
-            return;
-        }
-
-        // Validace formátu data
-        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-        if (!dateRegex.test(bookingState.selectedDate)) {
-            console.error('❌ Invalid date format:', bookingState.selectedDate);
-            alert('Chyba ve formátu data. Obnovte stránku a zkuste znovu.');
-            return;
-        }
-
-        // Kontrola, že datum není v minulosti
-        const selectedDateObj = new Date(bookingState.selectedDate + 'T00:00:00');
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        if (selectedDateObj < today) {
-            console.error('❌ Date is in the past:', bookingState.selectedDate);
-            alert('Nelze rezervovat minulé datum.');
-            return;
-        }
-
-        // Sběr osobních údajů
-        bookingState.personalInfo = {
-            firstName: document.getElementById('first-name')?.value.trim(),
-            lastName: document.getElementById('last-name')?.value.trim(),
-            email: document.getElementById('email')?.value.trim(),
-            phone: document.getElementById('phone')?.value.trim(),
-            players: document.getElementById('players')?.value,
-            notes: document.getElementById('notes')?.value.trim() || ''
-        };
-
-        // Vytvoření FormData
-        const formData = new FormData();
-        formData.append('room', bookingState.selectedRoom);
-        formData.append('date', bookingState.selectedDate); // YYYY-MM-DD formát
-        formData.append('time', bookingState.selectedTime);
-        formData.append('jmeno', bookingState.personalInfo.firstName);
-        formData.append('prijmeni', bookingState.personalInfo.lastName);
-        formData.append('email', bookingState.personalInfo.email);
-        formData.append('telefon', bookingState.personalInfo.phone);
-        formData.append('pocet_hracu', bookingState.personalInfo.players);
-        formData.append('poznamky', bookingState.personalInfo.notes);
-
-        // KRITICKÝ DEBUG - co odesíláme
-        console.log('📤 FORM DATA BEING SENT:');
-        for (let [key, value] of formData.entries()) {
-            console.log(`   ${key}: "${value}"`);
-        }
-
-        // CSRF token
-        const csrfToken = getCookie('csrftoken') ||
-            window.bookingConfig?.csrfToken ||
-            window.bookingUrls?.csrfToken;
-
-        if (!csrfToken) {
-            console.warn('⚠️ No CSRF token found');
-        }
-
-        // Submit URL
-        const submitUrl = window.bookingConfig?.urls?.bookingSubmit ||
-            window.bookingUrls?.bookingSubmit ||
-            '/booking/';
-
-        console.log(`🎯 Submitting to: ${submitUrl}`);
-
-        // UI feedback
-        if (loadingOverlay) loadingOverlay.classList.add('active');
-        btnNext.disabled = true;
-        btnNext.textContent = 'Odesílání...';
-
-        // AJAX request
-        fetch(submitUrl, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRFToken': csrfToken,
-                'X-Requested-With': 'XMLHttpRequest',
-            }
-        })
-            .then(response => {
-                console.log('📡 Response status:', response.status);
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('📥 SERVER RESPONSE:', data);
-
-                if (loadingOverlay) loadingOverlay.classList.remove('active');
-
-                if (data.success) {
-                    console.log('✅ Booking successful');
-
-                    // Aktualizace booking code
-                    const bookingCodeEl = document.getElementById('booking-code');
-                    if (bookingCodeEl) {
-                        bookingCodeEl.textContent = data.booking_code || 'EFT-XXXX';
-                    }
-
-                    // Přechod na úspěšnou stránku
-                    goToStep(4);
-                } else {
-                    console.error('❌ BOOKING FAILED:', data.errors);
-
-                    // Zobrazení chyb
-                    let errorMessage = 'Chyba při rezervaci:\n';
-                    if (typeof data.errors === 'object') {
-                        for (const [field, messages] of Object.entries(data.errors)) {
-                            if (Array.isArray(messages)) {
-                                errorMessage += `${field}: ${messages.join(', ')}\n`;
-                            } else {
-                                errorMessage += `${field}: ${messages}\n`;
-                            }
-                        }
-                    } else {
-                        errorMessage += data.errors || 'Neznámá chyba';
-                    }
-
-                    alert(errorMessage);
-
-                    // Obnovení tlačítka
-                    btnNext.disabled = false;
-                    btnNext.textContent = 'Dokončit rezervaci';
-                }
-            })
-            .catch(error => {
-                console.error('❌ NETWORK ERROR:', error);
-
-                if (loadingOverlay) loadingOverlay.classList.remove('active');
-
-                alert(`Chyba sítě: ${error.message}\nZkuste to prosím znovu.`);
-
-                // Obnovení tlačítka
-                btnNext.disabled = false;
-                btnNext.textContent = 'Dokončit rezervaci';
-            });
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 5000);
     }
 
-    // =====================================================================
-    // NAVIGACE MEZI KROKY
-    // =====================================================================
+    function showErrorMessage(message) {
+        document.querySelectorAll('.notification.error').forEach(n => n.remove());
+        const notification = document.createElement('div');
+        notification.className = 'notification error';
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span class="notification-icon">✗</span>
+                <span class="notification-message">${message}</span>
+                <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
+            </div>
+        `;
+        document.body.appendChild(notification);
 
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 300);
+            }
+        }, 8000);
+    }
+
+    
     function goToStep(stepNumber) {
-        console.log(`📍 Going to step ${stepNumber}`);
+        console.log('Přechod na krok:', stepNumber);
 
-        // Skrytí všech kroků
         steps.forEach(step => step.style.display = 'none');
-
-        // Zobrazení aktuálního kroku
-        const currentStepEl = document.getElementById(`booking-step-${stepNumber}`);
-        if (currentStepEl) {
-            currentStepEl.style.display = 'block';
+        const targetStep = document.getElementById(`booking-step-${stepNumber}`);
+        if (targetStep) {
+            targetStep.style.display = 'block';
         }
 
-        // Aktualizace progress baru
         progressSteps.forEach((step, index) => {
             step.classList.remove('active', 'completed');
             if (index < stepNumber - 1) {
@@ -635,148 +511,43 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Zobrazení/skrytí tlačítek
-        if (btnBack) {
-            btnBack.style.display = (stepNumber > 1 && stepNumber < 4) ? 'block' : 'none';
+        btnBack.style.display = stepNumber > 1 && stepNumber < 4 ? 'block' : 'none';
+
+        if (stepNumber === 4) {
+            document.getElementById('booking-navigation').style.display = 'none';
+        } else {
+            document.getElementById('booking-navigation').style.display = 'flex';
         }
 
-        if (btnNext) {
-            if (stepNumber === 4) {
-                btnNext.style.display = 'none';
-            } else {
-                btnNext.style.display = 'block';
-                btnNext.disabled = true;
+        bookingSummary.style.display = stepNumber > 1 && stepNumber < 4 ? 'block' : 'none';
 
-                if (stepNumber === 3) {
-                    btnNext.textContent = 'Dokončit rezervaci';
-                    validateForm(); // Počáteční validace
-                } else {
-                    btnNext.textContent = 'Pokračovat';
-                }
-            }
+        btnNext.disabled = true;
+
+        if (stepNumber === 3) {
+            btnNext.textContent = 'Dokončit rezervaci';
+            validateForm();
+        } else {
+            btnNext.textContent = 'Pokračovat';
         }
 
-        // Zobrazení/skrytí shrnutí
-        if (bookingSummary) {
-            bookingSummary.style.display = (stepNumber > 1 && stepNumber < 4) ? 'block' : 'none';
-        }
-
-        // Specifická logika pro jednotlivé kroky
         if (stepNumber === 1 && bookingState.selectedRoom) {
             btnNext.disabled = false;
         } else if (stepNumber === 2) {
             checkStep2Completion();
-            // Aktualizace počtu hráčů v sumáři
-            updatePlayersSummary();
         }
 
         bookingState.currentStep = stepNumber;
-
-        // Update debug info
-        if (window.debugBooking && window.debugBooking.updateDebugInfo) {
-            window.debugBooking.updateDebugInfo();
-        }
     }
 
-    function updatePlayersSummary() {
-        const playersSelect = document.getElementById('players');
-        const summaryPlayers = document.getElementById('summary-players');
-
-        if (playersSelect && summaryPlayers && playersSelect.value) {
-            const playerCount = playersSelect.value;
-            const playerText = playerCount === '1' ? 'hráč' :
-                ['2', '3', '4'].includes(playerCount) ? 'hráči' : 'hráčů';
-            summaryPlayers.textContent = `${playerCount} ${playerText}`;
-        }
-    }
-
-    // Event listeners pro navigaci
-    btnNext?.addEventListener('click', function () {
-        if (bookingState.currentStep === 3) {
-            submitBooking();
-        } else {
-            goToStep(bookingState.currentStep + 1);
-        }
-    });
-
-    btnBack?.addEventListener('click', function () {
+    btnBack.addEventListener('click', function () {
         goToStep(bookingState.currentStep - 1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // Update players summary when selection changes
-    document.getElementById('players')?.addEventListener('change', updatePlayersSummary);
-
-    // =====================================================================
-    // INICIALIZACE
-    // =====================================================================
-
-    // Kontrola konfigurace
-    if (!window.bookingConfig) {
-        console.warn('⚠️ window.bookingConfig not found, using fallbacks');
-        window.bookingConfig = {
-            urls: {
-                getAvailableSlots: '/booking/ajax/get_available_slots/',
-                bookingSubmit: '/booking/'
-            },
-            debug: true
-        };
-    }
-
-    // Backward compatibility
-    if (!window.bookingUrls) {
-        window.bookingUrls = window.bookingConfig.urls;
-        window.bookingUrls.csrfToken = window.bookingConfig.csrfToken;
-    }
-
-    console.log('🔧 Booking configuration:', window.bookingConfig);
-
-    // Generování kalendáře
+    
+    console.log('Inicializuji kalendář...');
     generateCalendar();
 
-    // Debug info update
-    if (window.bookingConfig?.debug) {
-        // Expose debug functions
-        window.debugBooking = {
-            updateDebugInfo: function () {
-                // Update debug panel if it exists
-                const debugElements = {
-                    room: document.getElementById('debug-room'),
-                    date: document.getElementById('debug-date'),
-                    time: document.getElementById('debug-time'),
-                    step: document.getElementById('debug-step')
-                };
-
-                if (debugElements.room) {
-                    debugElements.room.textContent = bookingState.roomName || 'Nevybráno';
-                }
-                if (debugElements.date) {
-                    debugElements.date.textContent = bookingState.selectedDate || 'Nevybráno';
-                }
-                if (debugElements.time) {
-                    debugElements.time.textContent = bookingState.selectedTime || 'Nevybráno';
-                }
-                if (debugElements.step) {
-                    debugElements.step.textContent = bookingState.currentStep || '1';
-                }
-            },
-            showState: () => console.table(bookingState),
-            testDateFormatting: function (year, month, day) {
-                console.log('🧪 Testing date formatting:');
-                const result = formatDateForServer(year, month, day);
-                console.log(`Input: ${year}-${month}-${day} (month 0-based)`);
-                console.log(`Output: ${result}`);
-                return result;
-            }
-        };
-
-        // Pravidelná aktualizace debug info
-        setInterval(() => {
-            if (window.debugBooking.updateDebugInfo) {
-                window.debugBooking.updateDebugInfo();
-            }
-        }, 2000);
-    }
-
-    console.log('🎉 Booking.js successfully loaded and initialized');
-    console.log('🔍 Current booking state:', bookingState);
+    
+    window.bookingState = bookingState;
 });

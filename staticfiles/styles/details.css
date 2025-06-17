@@ -109,7 +109,7 @@
         line-height: 1.6;
         font-size: 0.95rem;
         min-height: 90px;
-        margin-bottom: auto; /* vytlačí vše pod tím dolů */
+        margin-bottom: auto; 
     }
 
     .room-stats {

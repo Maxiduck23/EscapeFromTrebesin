@@ -1,10 +1,10 @@
-  // Enhanced Accordion Functionality
+  
   document.addEventListener('DOMContentLoaded', function() {
     const accordions = document.getElementsByClassName('accordion');
     
     for (let i = 0; i < accordions.length; i++) {
       accordions[i].addEventListener('click', function() {
-        // Close all other accordions
+        
         for (let j = 0; j < accordions.length; j++) {
           if (accordions[j] !== this) {
             accordions[j].classList.remove('active');
@@ -12,14 +12,14 @@
           }
         }
         
-        // Toggle current accordion
+        
         this.classList.toggle('active');
         const panel = this.nextElementSibling;
         panel.classList.toggle('open');
       });
     }
     
-    // Add animation on scroll
+    
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
@@ -34,7 +34,7 @@
       });
     }, observerOptions);
     
-    // Observe elements for scroll animations
+    
     document.querySelectorAll('.about-card, .accordion').forEach(el => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(20px)';
@@ -42,7 +42,7 @@
       observer.observe(el);
     });
     
-    // Interactive mission text
+    
     const missionText = document.getElementById('missionText');
     if (missionText) {
       missionText.addEventListener('click', function() {
@@ -54,7 +54,7 @@
     }
   });
   
-  // Pulse animation for mission text
+  
   const style = document.createElement('style');
   style.textContent = `
     @keyframes pulse {

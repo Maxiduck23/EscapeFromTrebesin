@@ -10,13 +10,13 @@ body {
     color: #f0f0f0;
 }
 
-/* Links */
+
 a {
     text-decoration: none;
     transition: color 0.3s;
 }
 
-/* ========================= HEADER & NAVIGATION ========================= */
+
 header {
     background-color: #131313;
     padding: 20px;
@@ -65,7 +65,7 @@ nav {
 .menu li {
     margin-left: 20px;
     position: relative;
-    list-style: none; /* Explicitly hide list markers */
+    list-style: none; 
 }
 
 .menu a {
@@ -82,7 +82,7 @@ nav {
     color: #e63946;
 }
 
-/* Dropdown Styles */
+
 .dropdown {
     position: relative;
 }
@@ -117,7 +117,7 @@ nav {
     transition: all 0.3s ease;
     z-index: 1000;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    list-style: none; /* Hide list markers in dropdown */
+    list-style: none; 
 }
 
 .dropdown.active .dropdown-menu {
@@ -128,7 +128,7 @@ nav {
 
 .dropdown-menu li {
     margin: 0;
-    list-style: none; /* Explicitly hide list markers in dropdown items */
+    list-style: none; 
 }
 
 .dropdown-menu a {
@@ -148,7 +148,7 @@ nav {
     color: #fff;
 }
 
-/* ========================= PAGE HEADER (Banner) ========================= */
+
 .page-header {
     background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/api/placeholder/1200/300');
     background-size: cover;
@@ -163,7 +163,7 @@ nav {
     color: #fff;
 }
 
-/* ========================= MAIN CONTENT STRUCTURE ========================= */
+
 section {
     padding: 60px 20px;
 }
@@ -173,7 +173,7 @@ section {
     margin: 0 auto;
 }
 
-/* ========================= TYPOGRAPHY ========================= */
+
 h1 {
     font-size: 3rem;
     margin-bottom: 20px;
@@ -197,7 +197,7 @@ p {
     line-height: 1.7;
 }
 
-/* ========================= BUTTONS ========================= */
+
 .btn {
     display: inline-block;
     background-color: #e63946;
@@ -217,7 +217,7 @@ p {
     background-color: #c1121f;
 }
 
-/* ========================= FOOTER ========================= */
+
 footer {
     background-color: #0a0a0a;
     padding: 40px 20px;
@@ -234,7 +234,7 @@ footer {
 
 .footer-links li {
     margin: 0 15px;
-    list-style: none; /* Hide list markers in footer */
+    list-style: none; 
 }
 
 .footer-links a {
@@ -252,7 +252,7 @@ footer {
     font-size: 0.9rem;
 }
 
-/* ========================= RESPONSIVE ========================= */
+
 @media (max-width: 768px) {
     .menu {
         flex-direction: column;
