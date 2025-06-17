@@ -111,6 +111,7 @@ nav {
     border: 1px solid #333;
     border-radius: 5px;
     min-width: 200px;
+    width: 200px; /* Ensure consistent width with other dropdowns */
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
