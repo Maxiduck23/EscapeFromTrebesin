@@ -44,17 +44,8 @@ document.addEventListener('DOMContentLoaded', function () {
             bookingState.roomPrice = parseInt(this.dataset.price);
             bookingState.roomName = this.querySelector('.room-name').textContent;
 
-            // Reset vybraného data a času při změně místnosti
-            bookingState.selectedDate = null;
-            bookingState.selectedTime = null;
-            document.getElementById('summary-date').textContent = '-';
-            document.getElementById('summary-time').textContent = '-';
-            document.querySelectorAll('.calendar-day.selected').forEach(d => d.classList.remove('selected'));
-            document.querySelectorAll('.time-slot.selected').forEach(t => t.classList.remove('selected'));
-            const timeSlotsContainer = document.getElementById('time-slots');
-            if (timeSlotsContainer) {
-                timeSlotsContainer.innerHTML = '';
-            }
+            // Důležité: reset vybraného data a času při změně místnosti
+            resetDateTimeSelection();
 
             // Aktualizace souhrnu
             document.getElementById('summary-room').textContent = bookingState.roomName;
@@ -62,10 +53,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Povolit další krok
             btnNext.disabled = false;
+
+            console.log('🏠 Místnost vybrána:', bookingState.roomName);
         });
     });
 
     // OPRAVENÁ KALENDÁŘOVÁ LOGIKA
+
+    // Odebere všechny vybrané dny v kalendáři
+    function clearAllDateSelections() {
+        document.querySelectorAll('.calendar-day.selected').forEach(day => {
+            day.classList.remove('selected');
+            day.style.backgroundColor = '';
+            day.style.color = '';
+            day.style.transform = '';
+            day.style.boxShadow = '';
+        });
+        console.log('🗓️ Všechny výběry datumů odstraněny');
+    }
+
     let currentMonth = new Date();
 
     function generateCalendar() {
@@ -79,6 +85,8 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // Před generováním nového kalendáře vyčistíme staré výběry
+        clearAllDateSelections();
         calendarGrid.innerHTML = '';
 
         // Přidání labels pro dny v týdnu
@@ -133,18 +141,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     console.log('Klik na datum:', this.dataset.date);
 
-                    document.querySelectorAll('.calendar-day.selected').forEach(d => d.classList.remove('selected'));
+                    // Odebrat výběr ze všech dnů
+                    clearAllDateSelections();
 
+                    // Vybrat pouze tento den
                     this.classList.add('selected');
                     bookingState.selectedDate = new Date(this.dataset.date);
-                    bookingState.selectedTime = null;
+                    bookingState.selectedTime = null; // reset času při změně datumu
 
                     const dateStr = `${day}. ${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`;
                     document.getElementById('summary-date').textContent = dateStr;
                     document.getElementById('summary-time').textContent = '-';
 
+                    // Vyčistit výběr času
+                    document.querySelectorAll('.time-slot.selected').forEach(slot => {
+                        slot.classList.remove('selected');
+                    });
+
+                    // Načíst nové dostupné časy
                     updateTimeSlots();
                     checkStep2Completion();
+
+                    console.log('✅ Datum vybráno:', dateStr);
                 });
 
                 dayElement.addEventListener('mouseenter', function () {
@@ -175,28 +193,50 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Navigation kalendáře
     document.getElementById('prev-month').addEventListener('click', function () {
-        console.log('Předchozí měsíc'); // Debug
+        console.log('Předchozí měsíc');
+
+        // Vyčistit všechny výběry před změnou měsíce
+        clearAllDateSelections();
+
         currentMonth.setMonth(currentMonth.getMonth() - 1);
         generateCalendar();
 
-        // Reset výběru při změně měsíce
+        // Reset stavu aplikace
         bookingState.selectedDate = null;
         bookingState.selectedTime = null;
         document.getElementById('summary-date').textContent = '-';
         document.getElementById('summary-time').textContent = '-';
+
+        // Vyčistit time slots
+        const timeSlotsContainer = document.getElementById('time-slots');
+        if (timeSlotsContainer) {
+            timeSlotsContainer.innerHTML = '';
+        }
+
         checkStep2Completion();
     });
 
     document.getElementById('next-month').addEventListener('click', function () {
-        console.log('Další měsíc'); // Debug
+        console.log('Další měsíc');
+
+        // Vyčistit všechny výběry před změnou měsíce
+        clearAllDateSelections();
+
         currentMonth.setMonth(currentMonth.getMonth() + 1);
         generateCalendar();
 
-        // Reset výběru při změně měsíce
+        // Reset stavu aplikace
         bookingState.selectedDate = null;
         bookingState.selectedTime = null;
         document.getElementById('summary-date').textContent = '-';
         document.getElementById('summary-time').textContent = '-';
+
+        // Vyčistit time slots
+        const timeSlotsContainer = document.getElementById('time-slots');
+        if (timeSlotsContainer) {
+            timeSlotsContainer.innerHTML = '';
+        }
+
         checkStep2Completion();
     });
 
@@ -274,13 +314,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Kontrola dokončení kroku 2
     function checkStep2Completion() {
-        if (bookingState.selectedDate && bookingState.selectedTime) {
+        const hasDate = bookingState.selectedDate != null;
+        const hasTime = bookingState.selectedTime != null;
+
+        if (hasDate && hasTime) {
             btnNext.disabled = false;
-            console.log('Krok 2 dokončen');
+            console.log('✅ Krok 2 dokončen - datum:', bookingState.selectedDate.toLocaleDateString('cs-CZ'), 'čas:', bookingState.selectedTime);
         } else {
             btnNext.disabled = true;
-            console.log('Krok 2 nedokončen - datum:', bookingState.selectedDate, 'čas:', bookingState.selectedTime);
+            console.log('❌ Krok 2 nedokončen - datum:', hasDate, 'čas:', hasTime);
         }
+    }
+
+    // Reset výběru data a času
+    function resetDateTimeSelection() {
+        clearAllDateSelections();
+
+        bookingState.selectedDate = null;
+        bookingState.selectedTime = null;
+
+        document.getElementById('summary-date').textContent = '-';
+        document.getElementById('summary-time').textContent = '-';
+
+        // Vyčistit time slots
+        const timeSlotsContainer = document.getElementById('time-slots');
+        if (timeSlotsContainer) {
+            timeSlotsContainer.innerHTML = '';
+        }
+
+        document.querySelectorAll('.time-slot.selected').forEach(slot => {
+            slot.classList.remove('selected');
+        });
     }
 
     // Validace formuláře
