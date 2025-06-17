@@ -1,4 +1,4 @@
-  /* ========================= ALCATRAZ PAGE SPECIFIC STYLES ========================= */
+  
 
   .room {
     background-color: #131313;
@@ -91,7 +91,7 @@
     z-index: 2;
   }
 
-  /* Story Introduction */
+  
   .story-intro {
     background: linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, rgba(19, 19, 19, 0.8) 100%);
     border-radius: 15px;
@@ -145,7 +145,7 @@
     text-align: center;
   }
 
-  /* Main Content Grid */
+  
   .room-content-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -160,7 +160,7 @@
     }
   }
 
-  /* Enhanced Description */
+  
   .room-description {
     background: linear-gradient(135deg, #1c1c1c 0%, #131313 100%);
     padding: 40px;
@@ -222,7 +222,7 @@
     margin-bottom: 30px;
   }
 
-  /* Features List */
+  
   .features-list {
     list-style: none;
     padding: 0;
@@ -258,7 +258,7 @@
     transform: scale(1.2);
   }
 
-  /* Enhanced Details Card */
+  
   .room-details {
     background: linear-gradient(135deg, #1c1c1c 0%, #131313 100%);
     padding: 40px;
@@ -334,7 +334,7 @@
     line-height: 1.5;
   }
 
-  /* Enhanced Gallery */
+  
   .gallery-section {
     margin-top: 50px;
   }
@@ -397,7 +397,7 @@
     transform: translateY(0);
   }
 
-  /* Reservation Section */
+  
   .reservation-section {
     background: linear-gradient(135deg, #e63946 0%, #c1121f 100%);
     padding: 40px;
@@ -459,7 +459,7 @@
     box-shadow: 0 8px 25px rgba(0,0,0,0.3);
   }
 
-  /* Animations */
+  
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -493,7 +493,7 @@
     }
   }
 
-  /* Mobile Responsive */
+  
   @media (max-width: 768px) {
     .room-title h1 {
       font-size: 2.2rem;

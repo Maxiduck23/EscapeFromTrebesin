@@ -1,6 +1,6 @@
-// Enhanced home.js with advanced animations
 
-// Smooth scrolling for anchor links
+
+
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -14,7 +14,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Animate stats on scroll
+
 const observerOptions = {
     threshold: 0.5,
     rootMargin: '0px 0px -100px 0px'
@@ -54,13 +54,13 @@ if (statsSection) {
     observer.observe(statsSection);
 }
 
-// Add loading animation for room cards with stagger effect
+
 const roomCards = document.querySelectorAll('.room-card');
 roomCards.forEach((card, index) => {
     card.style.animationDelay = `${index * 0.2}s`;
     card.classList.add('fade-in-up');
 
-    // Add advanced hover effects
+    
     card.addEventListener('mouseenter', function () {
         this.style.transform = 'translateY(-15px) scale(1.02) rotateX(5deg)';
         this.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
@@ -71,9 +71,9 @@ roomCards.forEach((card, index) => {
     });
 });
 
-// Enhanced DOMContentLoaded animations
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Parallax scroll effect for hero section
+    
     const hero = document.querySelector('.hero');
     if (hero) {
         window.addEventListener('scroll', () => {
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Scroll-triggered animations for all sections
+    
     const animatedElements = document.querySelectorAll('.testimonials, .experience-section, .cta-section');
     const intersectionObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 entry.target.style.opacity = '1';
                 entry.target.style.transform = 'translateY(0)';
 
-                // Add entrance class for CTA section
+                
                 if (entry.target.classList.contains('cta-section')) {
                     entry.target.classList.add('animate-entrance');
                 }
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
         intersectionObserver.observe(el);
     });
 
-    // Enhanced CTA section with periodic pulse effect
+    
     const ctaSection = document.querySelector('.cta-section');
     if (ctaSection) {
         const ctaObserver = new IntersectionObserver(function (entries) {
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('animate-entrance');
 
-                    // Start periodic pulse effect for the button
+                    
                     const ctaBtn = entry.target.querySelector('.btn-cta');
                     if (ctaBtn) {
                         setTimeout(() => {
@@ -125,8 +125,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                 setTimeout(() => {
                                     ctaBtn.style.animation = 'buttonPulse 2s ease-in-out';
                                 }, 50);
-                            }, 6000); // Pulse every 6 seconds
-                        }, 2000); // Wait 2 seconds before starting
+                            }, 6000); 
+                        }, 2000); 
                     }
 
                     ctaObserver.unobserve(entry.target);
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ctaObserver.observe(ctaSection);
     }
 
-    // Testimonial cards stagger animation
+    
     const testimonialCards = document.querySelectorAll('.testimonial');
     testimonialCards.forEach((card, index) => {
         card.style.opacity = '0';
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
         testimonialObserver.observe(card);
     });
 
-    // Advanced button hover effects with ripple
+    
     const buttons = document.querySelectorAll('.btn');
     buttons.forEach(btn => {
         btn.addEventListener('mouseenter', function () {
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Add ripple effect on click
+        
         btn.addEventListener('click', function (e) {
             const ripple = document.createElement('span');
             ripple.className = 'ripple';
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Inject enhanced keyframes if not already present
+    
     if (!document.getElementById('enhanced-home-keyframes')) {
         const style = document.createElement('style');
         style.id = 'enhanced-home-keyframes';

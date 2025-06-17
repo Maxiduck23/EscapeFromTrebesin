@@ -1,7 +1,7 @@
-// Common animations for room pages
+
 
 function initRoomAnimations() {
-  // Scroll-based reveal
+  
   const elements = document.querySelectorAll(
     '.story-intro, .room-description, .room-details, .detail-item, .gallery-item, .reservation-section'
   );
@@ -25,7 +25,7 @@ function initRoomAnimations() {
     });
   }
 
-  // Story intro pulse
+  
   const storyIntro = document.getElementById('storyIntro');
   if (storyIntro) {
     storyIntro.addEventListener('click', function () {
@@ -36,7 +36,7 @@ function initRoomAnimations() {
     });
   }
 
-  // Difficulty stars glow
+  
   const difficultyStars = document.querySelectorAll('.difficulty span.active');
   difficultyStars.forEach((star, index) => {
     setTimeout(() => {
@@ -45,7 +45,7 @@ function initRoomAnimations() {
     }, 1000);
   });
 
-  // Detail item hover scaling
+  
   const detailItems = document.querySelectorAll('.detail-item');
   detailItems.forEach((item) => {
     item.addEventListener('mouseenter', function () {
@@ -62,7 +62,7 @@ function initRoomAnimations() {
     });
   });
 
-  // Reservation button pulse
+  
   const reservationBtn = document.querySelector('.reservation-section .btn');
   if (reservationBtn) {
     setInterval(() => {
@@ -73,7 +73,7 @@ function initRoomAnimations() {
     }, 5000);
   }
 
-  // Inject common keyframes
+  
   const style = document.createElement('style');
   style.textContent = `
     @keyframes pulse {
