@@ -205,82 +205,63 @@
 
 {% block extra_js %}
 <script>
-    window.bookingUrls = {
-        getAvailableSlots: "{% url 'booking:get_available_slots' %}",
-        bookingSubmit: "{% url 'booking:booking' %}",
-        csrfToken: "{{ csrf_token }}"
+    window.bookingConfig = {
+        urls: {
+            getAvailableSlots: "{% url 'booking:get_available_slots' %}",
+            bookingSubmit: "{% url 'booking:booking' %}",
+        },
+        csrfToken: "{{ csrf_token }}",
+        debug: {% if settings.DEBUG %}true{% else %}false{% endif %}
     };
-
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('🚀 Booking page loaded');
-        console.log('📅 Calendar grid:', document.getElementById('calendar-grid'));
-        console.log('⏰ Time slots:', document.getElementById('time-slots'));
-        console.log('🔗 Booking URLs:', window.bookingUrls);
-
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('calendar-day')) {
-                console.log('📅 Calendar day clicked:', e.target.textContent, e.target.classList);
-            }
-            if (e.target.classList.contains('time-slot')) {
-                console.log('⏰ Time slot clicked:', e.target.textContent, e.target.classList);
-            }
-        });
-    });
-
-    {% if settings.DEBUG %}
-    function updateDebugInfo() {
-        const debugElement = document.getElementById('debug-booking-state');
-        if (!debugElement) return;
-
-        const selectedRoom = document.querySelector('.room-option.selected');
-        const selectedDate = document.querySelector('.calendar-day.selected');
-        const selectedTime = document.querySelector('.time-slot.selected');
-        const currentStep = document.querySelector('.progress-step.active');
-
-        const debugInfo = `
-            <div>Krok: ${currentStep ? currentStep.querySelector('.step-number span').textContent : 'N/A'}</div>
-            <div>Místnost: ${selectedRoom ? selectedRoom.querySelector('.room-name').textContent : 'Nevybráno'}</div>
-            <div>Datum: ${selectedDate ? selectedDate.textContent : 'Nevybráno'}</div>
-            <div>Čas: ${selectedTime ? selectedTime.textContent : 'Nevybráno'}</div>
-            <div>Kalendář: ${document.getElementById('calendar-grid') ? 'Nalezen' : 'Nenalezen'}</div>
-            <div>Time slots: ${document.getElementById('time-slots') ? 'Nalezen' : 'Nenalezen'}</div>
-            <div>URL getSlots: ${window.bookingUrls ? 'OK' : 'Chybí'}</div>
-        `;
-
-        debugElement.innerHTML = debugInfo;
-    }
-
-    setInterval(updateDebugInfo, 2000);
-    updateDebugInfo();
-    {% endif %}
+    window.bookingUrls = window.bookingConfig.urls;
+    window.bookingUrls.csrfToken = window.bookingConfig.csrfToken;
+    console.log('🔧 Booking configuration loaded:', window.bookingConfig);
 </script>
-
 <script src="{% static 'js/booking.js' %}"></script>
-
 {% if settings.DEBUG %}
-<div class="debug-info" id="debug-info" style="
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background: rgba(0, 0, 0, 0.9);
-    color: #fff;
-    padding: 10px;
-    border-radius: 5px;
-    font-family: monospace;
-    font-size: 0.8rem;
-    z-index: 1000;
-    max-width: 300px;
-    opacity: 0.8;
-">
-    <div style="border-bottom: 1px solid #666; margin-bottom: 5px; padding-bottom: 5px;">
-        <strong>🐛 Debug Info</strong>
-        <button onclick="document.getElementById('debug-info').style.display='none'"
-                style="float: right; background: none; border: none; color: #fff;">&times;</button>
-    </div>
-    <div id="debug-booking-state">
-        Načítám stav...
+<div class="debug-info" id="debug-info">
+    <h4>🐛 Debug Info</h4>
+    <button onclick="document.getElementById('debug-info').style.display='none'" style="float: right; background: none; border: none; color: #fff; margin-top: -25px;">&times;</button>
+    <div class="debug-status" id="debug-status">
+        <div>Kalendář: <span id="debug-calendar">❌</span></div>
+        <div>Time slots: <span id="debug-timeslots">❌</span></div>
+        <div>URLs: <span id="debug-urls">❌</span></div>
+        <div>CSRF: <span id="debug-csrf">❌</span></div>
+        <div>Místnost: <span id="debug-room">Nevybráno</span></div>
+        <div>Datum: <span id="debug-date">Nevybráno</span></div>
+        <div>Čas: <span id="debug-time">Nevybráno</span></div>
+        <div>Krok: <span id="debug-step">1</span></div>
     </div>
 </div>
+<script>
+    function updateDebugInfo() {
+        if (!window.bookingConfig?.debug) return;
+        const el = {
+            calendar: document.getElementById('debug-calendar'),
+            timeslots: document.getElementById('debug-timeslots'),
+            urls: document.getElementById('debug-urls'),
+            csrf: document.getElementById('debug-csrf'),
+            room: document.getElementById('debug-room'),
+            date: document.getElementById('debug-date'),
+            time: document.getElementById('debug-time'),
+            step: document.getElementById('debug-step')
+        };
+        if (el.calendar) el.calendar.innerHTML = document.getElementById('calendar-grid') ? '<span class="status-ok">✅</span>' : '<span class="status-error">❌</span>';
+        if (el.timeslots) el.timeslots.innerHTML = document.getElementById('time-slots') ? '<span class="status-ok">✅</span>' : '<span class="status-error">❌</span>';
+        if (el.urls) el.urls.innerHTML = window.bookingUrls ? '<span class="status-ok">✅</span>' : '<span class="status-error">❌</span>';
+        if (el.csrf) {
+            const csrf = getCookie('csrftoken') || window.bookingConfig?.csrfToken;
+            el.csrf.innerHTML = csrf ? '<span class="status-ok">✅</span>' : '<span class="status-error">❌</span>';
+        }
+        if (window.bookingState) {
+            if (el.room) el.room.textContent = window.bookingState.roomName || 'Nevybráno';
+            if (el.date) el.date.textContent = window.bookingState.selectedDate ? window.bookingState.selectedDate.toLocaleDateString('cs-CZ') : 'Nevybráno';
+            if (el.time) el.time.textContent = window.bookingState.selectedTime || 'Nevybráno';
+            if (el.step) el.step.textContent = window.bookingState.currentStep || '1';
+        }
+    }
+    setInterval(updateDebugInfo, 2000);
+    setTimeout(updateDebugInfo, 1000);
+</script>
 {% endif %}
 {% endblock %}
-
