@@ -1114,11 +1114,6 @@
         color: #f39c12;
     }
 
-    =========================*/ .calendar-day:focus,
-    .time-slot:focus {
-        outline: 2px solid #e63946;
-        outline-offset: 2px;
-    }
 
     @media (prefers-reduced-motion: reduce) {
 

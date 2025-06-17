@@ -22,6 +22,7 @@ header {
     padding: 20px;
     border-bottom: 2px solid #e63946;
 }
+
 .hidden {
     visibility: hidden;
 }
@@ -30,6 +31,8 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .logo {
@@ -40,10 +43,12 @@ nav {
     color: #e63946;
     cursor: pointer;
     transition: transform 0.3s ease;
+    text-decoration: none;
 }
 
 .logo:hover {
     transform: translateY(-5px) scale(1.02);
+    color: #e63946;
 }
 
 .logo img {
@@ -56,16 +61,22 @@ nav {
     transform: scale(1.1);
 }
 
+.logo p {
+    margin: 0;
+    color: inherit;
+}
+
 .menu {
     display: flex;
     list-style: none;
-    position: relative;
+    margin: 0;
+    padding: 0;
 }
 
 .menu li {
     margin-left: 20px;
     position: relative;
-    list-style: none; /* Explicitly hide list markers */
+    list-style: none;
 }
 
 .menu a {
@@ -116,8 +127,10 @@ nav {
     transform: translateY(-10px);
     transition: all 0.3s ease;
     z-index: 1000;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    list-style: none; /* Hide list markers in dropdown */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .dropdown.active .dropdown-menu {
@@ -128,7 +141,7 @@ nav {
 
 .dropdown-menu li {
     margin: 0;
-    list-style: none; /* Explicitly hide list markers in dropdown items */
+    list-style: none;
 }
 
 .dropdown-menu a {
@@ -148,9 +161,25 @@ nav {
     color: #fff;
 }
 
+/* Mobile menu toggle */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background-color: #f0f0f0;
+    margin: 3px 0;
+    transition: 0.3s;
+}
+
 /* ========================= PAGE HEADER (Banner) ========================= */
 .page-header {
-    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/api/placeholder/1200/300');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/api/placeholder/1200/300');
     background-size: cover;
     background-position: center;
     padding: 60px 20px;
@@ -225,22 +254,32 @@ footer {
     border-top: 1px solid #333;
 }
 
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 .footer-links {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     list-style: none;
-    margin-bottom: 20px;
+    margin: 0 0 20px 0;
+    padding: 0;
+    gap: 15px;
 }
 
 .footer-links li {
-    margin: 0 15px;
-    list-style: none; /* Hide list markers in footer */
+    margin: 0;
+    list-style: none;
 }
 
 .footer-links a {
     color: #f0f0f0;
     text-decoration: none;
     transition: color 0.3s;
+    padding: 5px 10px;
+    display: block;
 }
 
 .footer-links a:hover {
@@ -250,37 +289,83 @@ footer {
 .copyright {
     color: #777;
     font-size: 0.9rem;
+    margin: 0;
 }
 
 /* ========================= RESPONSIVE ========================= */
 @media (max-width: 768px) {
-    .menu {
+    nav {
         flex-direction: column;
-        gap: 10px;
+        align-items: flex-start;
     }
-    
+
+    .menu-toggle {
+        display: flex;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+
+    .menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 20px;
+        gap: 0;
+    }
+
+    .menu.active {
+        display: flex;
+    }
+
     .menu li {
-        margin-left: 0;
+        margin: 0;
+        width: 100%;
+        border-bottom: 1px solid #333;
     }
-    
+
+    .menu a {
+        padding: 15px 0;
+        width: 100%;
+    }
+
     .dropdown-menu {
         position: static;
         transform: none;
         box-shadow: none;
         border: none;
         background-color: #0a0a0a;
-        margin-top: 10px;
+        margin: 0;
+        opacity: 1;
+        visibility: visible;
     }
-    
+
+    .dropdown-menu a {
+        padding-left: 20px;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+
     h1 {
         font-size: 2rem;
     }
-    
+
     h2 {
         font-size: 1.8rem;
     }
-    
+
     .page-header {
         padding: 40px 20px;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+    }
+
+    .logo img {
+        height: 2rem;
     }
 }
