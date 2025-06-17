@@ -410,11 +410,13 @@
 
     .form-control:focus {
         outline: none;
-    .form-control.error {
-        border-color: #e74c3c !important;
-        background-color: rgba(231, 76, 60, 0.1) !important;
-        box-shadow: 0 0 10px rgba(231, 76, 60, 0.3) !important;
-    }
+
+        .form-control.error {
+            border-color: #e74c3c !important;
+            background-color: rgba(231, 76, 60, 0.1) !important;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.3) !important;
+        }
+
         border-color: #e63946;
         background: rgba(230, 57, 70, 0.05);
         box-shadow: 0 0 20px rgba(230, 57, 70, 0.2);
@@ -822,7 +824,7 @@
         box-shadow: none !important;
     }
 
-    .time-slot.disabled::after {
+    /* .time-slot.disabled::after {
         content: 'Obsazeno';
         position: absolute;
         top: 50%;
@@ -830,16 +832,18 @@
         transform: translate(-50%, -50%);
         font-size: 0.8rem;
         color: #999;
-    }
+    } */
 
     /* Animace pro výběr */
     @keyframes selectAnimation {
         0% {
             transform: scale(1);
         }
+
         50% {
             transform: scale(1.15);
         }
+
         100% {
             transform: scale(1.1);
         }
@@ -876,6 +880,7 @@
 
     /* Reduced motion pro accessibility */
     @media (prefers-reduced-motion: reduce) {
+
         .calendar-day,
         .time-slot {
             transition: none;
@@ -1108,9 +1113,8 @@
     .debug-status .status-warning {
         color: #f39c12;
     }
-   ========================= */
 
-    .calendar-day:focus,
+    =========================*/ .calendar-day:focus,
     .time-slot:focus {
         outline: 2px solid #e63946;
         outline-offset: 2px;
