@@ -664,10 +664,9 @@
         }
     }
 
-    /* =========================
-   VYLEPŠENÉ KALENDÁŘOVÉ STYLY
-   ========================= */
+    /* OPRAVENÉ CSS PRO KALENDÁŘ - zabránění vícenásobného výběru */
 
+    /* Zajistit, že pouze jeden den může být vybrán současně */
     .calendar-day {
         width: 40px;
         height: 40px;
@@ -676,34 +675,55 @@
         justify-content: center;
         border-radius: 8px;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         font-weight: 500;
         border: 2px solid transparent;
         position: relative;
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        color: #f0f0f0 !important;
     }
 
-    .calendar-day:not(.disabled):not(.empty) {
-        background-color: rgba(255, 255, 255, 0.05);
-        color: #f0f0f0;
+    /* Normální stav - bez výběru */
+    .calendar-day:not(.disabled):not(.empty):not(.selected) {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        color: #f0f0f0 !important;
     }
 
-    .calendar-day:not(.disabled):not(.empty):hover {
-        background-color: #e63946 !important;
+    /* Hover efekt - pouze pokud není vybraný */
+    .calendar-day:not(.disabled):not(.empty):not(.selected):hover {
+        background-color: rgba(230, 57, 70, 0.4) !important;
         color: #fff !important;
-        transform: scale(1.1);
-        box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+        transform: scale(1.05);
+        box-shadow: 0 2px 10px rgba(230, 57, 70, 0.3);
     }
 
+    /* VYBRANÝ den - nejvyšší priorita */
     .calendar-day.selected {
         background-color: #e63946 !important;
         color: #fff !important;
-        border-color: #c1121f;
-        box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.3);
+        border-color: #c1121f !important;
+        box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.3) !important;
+        transform: scale(1.1) !important;
+        font-weight: bold !important;
+        z-index: 10;
     }
 
-    .calendar-day.today {
-        border-color: #e63946;
+    /* Vybraný den - hover efekt (zůstane vybraný) */
+    .calendar-day.selected:hover {
+        background-color: #c1121f !important;
+        color: #fff !important;
+        box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.5) !important;
+        transform: scale(1.1) !important;
+    }
+
+    /* Dnešní den */
+    .calendar-day.today:not(.selected) {
+        border-color: #e63946 !important;
         font-weight: bold;
+    }
+
+    .calendar-day.today.selected {
+        border-color: #c1121f !important;
     }
 
     .calendar-day.today::after {
@@ -718,54 +738,88 @@
         border-radius: 50%;
     }
 
+    .calendar-day.today.selected::after {
+        background-color: #fff;
+    }
+
+    /* Zakázané dny */
     .calendar-day.disabled {
         background-color: rgba(255, 255, 255, 0.02) !important;
         color: #666 !important;
         cursor: not-allowed !important;
-        opacity: 0.5;
+        opacity: 0.5 !important;
+        transform: none !important;
+        box-shadow: none !important;
     }
 
+    .calendar-day.disabled:hover {
+        background-color: rgba(255, 255, 255, 0.02) !important;
+        color: #666 !important;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Prázdné buňky */
     .calendar-day.empty {
-        cursor: default;
-        pointer-events: none;
+        cursor: default !important;
+        pointer-events: none !important;
+        background-color: transparent !important;
+        color: transparent !important;
     }
 
-    /* =========================
-   VYLEPŠENÉ TIME SLOT STYLY
-   ========================= */
-
+    /* OPRAVENÉ TIME SLOT STYLY */
     .time-slot {
         padding: 12px 20px;
-        background-color: rgba(255, 255, 255, 0.05);
+        background-color: rgba(255, 255, 255, 0.05) !important;
         border: 2px solid transparent;
         border-radius: 8px;
         text-align: center;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         font-weight: 500;
-        color: #f0f0f0;
+        color: #f0f0f0 !important;
+        position: relative;
     }
 
-    .time-slot:not(.disabled):hover {
-        background-color: #e63946 !important;
+    /* Time slot hover - pouze pokud není vybraný */
+    .time-slot:not(.disabled):not(.selected):hover {
+        background-color: rgba(230, 57, 70, 0.4) !important;
         color: #fff !important;
         transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+        box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
     }
 
+    /* Vybraný time slot */
     .time-slot.selected {
         background-color: #e63946 !important;
         color: #fff !important;
-        border-color: #c1121f;
-        box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.3);
+        border-color: #c1121f !important;
+        box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.3) !important;
+        transform: translateY(-2px) !important;
+        font-weight: bold !important;
     }
 
+    .time-slot.selected:hover {
+        background-color: #c1121f !important;
+        color: #fff !important;
+        box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.5) !important;
+    }
+
+    /* Zakázané time sloty */
     .time-slot.disabled {
         background-color: rgba(255, 255, 255, 0.02) !important;
         color: #666 !important;
         cursor: not-allowed !important;
-        opacity: 0.5;
-        position: relative;
+        opacity: 0.5 !important;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    .time-slot.disabled:hover {
+        background-color: rgba(255, 255, 255, 0.02) !important;
+        color: #666 !important;
+        transform: none !important;
+        box-shadow: none !important;
     }
 
     .time-slot.disabled::after {
@@ -776,6 +830,62 @@
         transform: translate(-50%, -50%);
         font-size: 0.8rem;
         color: #999;
+    }
+
+    /* Animace pro výběr */
+    @keyframes selectAnimation {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.15);
+        }
+        100% {
+            transform: scale(1.1);
+        }
+    }
+
+    .calendar-day.selected {
+        animation: selectAnimation 0.3s ease-out;
+    }
+
+    .time-slot.selected {
+        animation: selectAnimation 0.3s ease-out;
+    }
+
+    /* Focus stavy pro accessibility */
+    .calendar-day:focus,
+    .time-slot:focus {
+        outline: 2px solid #e63946;
+        outline-offset: 2px;
+    }
+
+    /* Media queries pro responzivitu */
+    @media (max-width: 768px) {
+        .calendar-day {
+            width: 35px;
+            height: 35px;
+            font-size: 0.9rem;
+        }
+
+        .time-slot {
+            padding: 10px 15px;
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Reduced motion pro accessibility */
+    @media (prefers-reduced-motion: reduce) {
+        .calendar-day,
+        .time-slot {
+            transition: none;
+            animation: none;
+        }
+
+        .calendar-day.selected,
+        .time-slot.selected {
+            animation: none;
+        }
     }
 
     /* =========================
