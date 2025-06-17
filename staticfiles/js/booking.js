@@ -44,6 +44,18 @@ document.addEventListener('DOMContentLoaded', function () {
             bookingState.roomPrice = parseInt(this.dataset.price);
             bookingState.roomName = this.querySelector('.room-name').textContent;
 
+            // Reset vybraného data a času při změně místnosti
+            bookingState.selectedDate = null;
+            bookingState.selectedTime = null;
+            document.getElementById('summary-date').textContent = '-';
+            document.getElementById('summary-time').textContent = '-';
+            document.querySelectorAll('.calendar-day.selected').forEach(d => d.classList.remove('selected'));
+            document.querySelectorAll('.time-slot.selected').forEach(t => t.classList.remove('selected'));
+            const timeSlotsContainer = document.getElementById('time-slots');
+            if (timeSlotsContainer) {
+                timeSlotsContainer.innerHTML = '';
+            }
+
             // Aktualizace souhrnu
             document.getElementById('summary-room').textContent = bookingState.roomName;
             document.getElementById('summary-price').textContent = bookingState.roomPrice + ' Kč';
