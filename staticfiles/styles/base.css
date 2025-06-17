@@ -1,0 +1,286 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #0a0a0a;
+    color: #f0f0f0;
+}
+
+/* Links */
+a {
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+/* ========================= HEADER & NAVIGATION ========================= */
+header {
+    background-color: #131313;
+    padding: 20px;
+    border-bottom: 2px solid #e63946;
+}
+.hidden {
+    visibility: hidden;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: #e63946;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: translateY(-5px) scale(1.02);
+}
+
+.logo img {
+    height: 2.5rem;
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover img {
+    transform: scale(1.1);
+}
+
+.menu {
+    display: flex;
+    list-style: none;
+    position: relative;
+}
+
+.menu li {
+    margin-left: 20px;
+    position: relative;
+    list-style: none; /* Explicitly hide list markers */
+}
+
+.menu a {
+    color: #f0f0f0;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.menu a:hover {
+    color: #e63946;
+}
+
+/* Dropdown Styles */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    cursor: pointer;
+    position: relative;
+}
+
+.dropdown-toggle::after {
+    content: "▼";
+    margin-left: 8px;
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.dropdown.active .dropdown-toggle::after {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 5px;
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    list-style: none; /* Hide list markers in dropdown */
+}
+
+.dropdown.active .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu li {
+    margin: 0;
+    list-style: none; /* Explicitly hide list markers in dropdown items */
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 12px 16px;
+    color: #f0f0f0;
+    border-bottom: 1px solid #333;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dropdown-menu li:last-child a {
+    border-bottom: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: #e63946;
+    color: #fff;
+}
+
+/* ========================= PAGE HEADER (Banner) ========================= */
+.page-header {
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/api/placeholder/1200/300');
+    background-size: cover;
+    background-position: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.page-header h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+/* ========================= MAIN CONTENT STRUCTURE ========================= */
+section {
+    padding: 60px 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ========================= TYPOGRAPHY ========================= */
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #e63946;
+}
+
+h3 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #f0f0f0;
+}
+
+p {
+    line-height: 1.7;
+}
+
+/* ========================= BUTTONS ========================= */
+.btn {
+    display: inline-block;
+    background-color: #e63946;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: #c1121f;
+}
+
+/* ========================= FOOTER ========================= */
+footer {
+    background-color: #0a0a0a;
+    padding: 40px 20px;
+    text-align: center;
+    border-top: 1px solid #333;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+.footer-links li {
+    margin: 0 15px;
+    list-style: none; /* Hide list markers in footer */
+}
+
+.footer-links a {
+    color: #f0f0f0;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: #e63946;
+}
+
+.copyright {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+/* ========================= RESPONSIVE ========================= */
+@media (max-width: 768px) {
+    .menu {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .menu li {
+        margin-left: 0;
+    }
+    
+    .dropdown-menu {
+        position: static;
+        transform: none;
+        box-shadow: none;
+        border: none;
+        background-color: #0a0a0a;
+        margin-top: 10px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.8rem;
+    }
+    
+    .page-header {
+        padding: 40px 20px;
+    }
+}

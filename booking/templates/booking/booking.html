@@ -210,9 +210,53 @@
         bookingSubmit: "{% url 'booking:booking' %}",
         csrfToken: "{{ csrf_token }}"
     };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 Booking page loaded');
+        console.log('📅 Calendar grid:', document.getElementById('calendar-grid'));
+        console.log('⏰ Time slots:', document.getElementById('time-slots'));
+        console.log('🔗 Booking URLs:', window.bookingUrls);
+
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('calendar-day')) {
+                console.log('📅 Calendar day clicked:', e.target.textContent, e.target.classList);
+            }
+            if (e.target.classList.contains('time-slot')) {
+                console.log('⏰ Time slot clicked:', e.target.textContent, e.target.classList);
+            }
+        });
+    });
+
+    {% if settings.DEBUG %}
+    function updateDebugInfo() {
+        const debugElement = document.getElementById('debug-booking-state');
+        if (!debugElement) return;
+
+        const selectedRoom = document.querySelector('.room-option.selected');
+        const selectedDate = document.querySelector('.calendar-day.selected');
+        const selectedTime = document.querySelector('.time-slot.selected');
+        const currentStep = document.querySelector('.progress-step.active');
+
+        const debugInfo = `
+            <div>Krok: ${currentStep ? currentStep.querySelector('.step-number span').textContent : 'N/A'}</div>
+            <div>Místnost: ${selectedRoom ? selectedRoom.querySelector('.room-name').textContent : 'Nevybráno'}</div>
+            <div>Datum: ${selectedDate ? selectedDate.textContent : 'Nevybráno'}</div>
+            <div>Čas: ${selectedTime ? selectedTime.textContent : 'Nevybráno'}</div>
+            <div>Kalendář: ${document.getElementById('calendar-grid') ? 'Nalezen' : 'Nenalezen'}</div>
+            <div>Time slots: ${document.getElementById('time-slots') ? 'Nalezen' : 'Nenalezen'}</div>
+            <div>URL getSlots: ${window.bookingUrls ? 'OK' : 'Chybí'}</div>
+        `;
+
+        debugElement.innerHTML = debugInfo;
+    }
+
+    setInterval(updateDebugInfo, 2000);
+    updateDebugInfo();
+    {% endif %}
 </script>
+
 <script src="{% static 'js/booking.js' %}"></script>
-<!-- Přidejte tento debug snippet na konec vašeho booking.html před {% endblock %} -->
+
 {% if settings.DEBUG %}
 <div class="debug-info" id="debug-info" style="
     position: fixed;
@@ -237,50 +281,6 @@
         Načítám stav...
     </div>
 </div>
-
-<script>
-function updateDebugInfo() {
-    const debugElement = document.getElementById('debug-booking-state');
-    if (!debugElement) return;
-
-    const selectedRoom = document.querySelector('.room-option.selected');
-    const selectedDate = document.querySelector('.calendar-day.selected');
-    const selectedTime = document.querySelector('.time-slot.selected');
-    const currentStep = document.querySelector('.progress-step.active');
-
-    const debugInfo = `
-        <div>Krok: ${currentStep ? currentStep.querySelector('.step-number span').textContent : 'N/A'}</div>
-        <div>Místnost: ${selectedRoom ? selectedRoom.querySelector('.room-name').textContent : 'Nevybráno'}</div>
-        <div>Datum: ${selectedDate ? selectedDate.textContent : 'Nevybráno'}</div>
-        <div>Čas: ${selectedTime ? selectedTime.textContent : 'Nevybráno'}</div>
-        <div>Kalendář: ${document.getElementById('calendar-grid') ? 'Nalezen' : 'Nenalezen'}</div>
-        <div>Time slots: ${document.getElementById('time-slots') ? 'Nalezen' : 'Nenalezen'}</div>
-        <div>URL getSlots: ${window.bookingUrls ? 'OK' : 'Chybí'}</div>
-    `;
-
-    debugElement.innerHTML = debugInfo;
-}
-
-setInterval(updateDebugInfo, 2000);
-updateDebugInfo();
-</script>
 {% endif %}
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Booking page loaded');
-    console.log('📅 Calendar grid:', document.getElementById('calendar-grid'));
-    console.log('⏰ Time slots:', document.getElementById('time-slots'));
-    console.log('🔗 Booking URLs:', window.bookingUrls);
-
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('calendar-day')) {
-            console.log('📅 Calendar day clicked:', e.target.textContent, e.target.classList);
-        }
-        if (e.target.classList.contains('time-slot')) {
-            console.log('⏰ Time slot clicked:', e.target.textContent, e.target.classList);
-        }
-    });
-});
-</script>
 {% endblock %}
+

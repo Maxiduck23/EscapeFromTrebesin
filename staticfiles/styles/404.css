@@ -1,0 +1,8 @@
+.error-page {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.error-page a {
+    color: #e63946;
+}
