@@ -410,6 +410,11 @@
 
     .form-control:focus {
         outline: none;
+    .form-control.error {
+        border-color: #e74c3c !important;
+        background-color: rgba(231, 76, 60, 0.1) !important;
+        box-shadow: 0 0 10px rgba(231, 76, 60, 0.3) !important;
+    }
         border-color: #e63946;
         background: rgba(230, 57, 70, 0.05);
         box-shadow: 0 0 20px rgba(230, 57, 70, 0.2);
@@ -827,6 +832,20 @@
     }
 
     /* =========================
+    .notification-close {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.2rem;
+        cursor: pointer;
+        margin-left: 10px;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+    }
+
+    .notification-close:hover {
+        opacity: 1;
+    }
    LOADING OVERLAY VYLEPŠENÍ
    ========================= */
 
@@ -943,19 +962,42 @@
         position: fixed;
         bottom: 20px;
         left: 20px;
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.9);
         color: #fff;
-        padding: 10px;
-        border-radius: 5px;
-        font-family: monospace;
+        padding: 15px;
+        border-radius: 8px;
+        font-family: "Courier New", monospace;
         font-size: 0.8rem;
         z-index: 1000;
-        display: none;
-        /* Zapnout pro debug */
+        max-width: 350px;
+        border: 1px solid #444;
     }
 
-    /* =========================
-   PŘÍSTUPNOST
+    .debug-info h4 {
+        margin: 0 0 10px 0;
+        color: #e63946;
+        border-bottom: 1px solid #444;
+        padding-bottom: 5px;
+    }
+
+    .debug-status {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px;
+        font-size: 0.75rem;
+    }
+
+    .debug-status .status-ok {
+        color: #2ecc71;
+    }
+
+    .debug-status .status-error {
+        color: #e74c3c;
+    }
+
+    .debug-status .status-warning {
+        color: #f39c12;
+    }
    ========================= */
 
     .calendar-day:focus,
