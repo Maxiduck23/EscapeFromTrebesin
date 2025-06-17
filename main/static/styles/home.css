@@ -1,6 +1,6 @@
-/* ========================= HOME PAGE SPECIFIC STYLES ========================= */
 
-/* Hero Section */
+
+
 .hero {
     height: 100vh;
     background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('...');
@@ -84,7 +84,7 @@
     transform: translateY(-3px);
 }
 
-/* Stats Section */
+
 .stats-section {
     background: linear-gradient(135deg, #131313 0%, #1a1a1a 100%);
     padding: 80px 20px;
@@ -123,7 +123,7 @@
     color: #f0f0f0;
 }
 
-/* Rooms Section */
+
 .rooms-section {
     background: #0a0a0a;
     padding: 100px 20px;
@@ -274,7 +274,7 @@
     border: 1px solid rgba(230, 57, 70, 0.3);
 }
 
-/* Experience Section */
+
 .experience-section {
     background: linear-gradient(135deg, #131313 0%, #0a0a0a 100%);
     padding: 100px 20px;
@@ -321,7 +321,7 @@
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
 }
 
-/* Testimonials */
+
 .testimonials {
     background: #0a0a0a;
     text-align: center;
@@ -370,7 +370,7 @@
     display: inline-block;
 }
 
-/* Enhanced CTA Section */
+
 .cta-section {
     background: linear-gradient(135deg, #e63946, #c1121f);
     padding: 80px 20px;
@@ -451,7 +451,7 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
-/* Enhanced Animations */
+
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -608,7 +608,7 @@
     }
 }
 
-/* Enhanced ripple effect */
+
 .ripple {
     position: absolute;
     border-radius: 50%;
@@ -618,19 +618,19 @@
     pointer-events: none;
 }
 
-/* Enhanced fade-in-up animation */
+
 .fade-in-up {
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 0.8s ease-out forwards;
 }
 
-/* Room card enhanced hover effects */
+
 .room-card {
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Enhanced room card animations */
+
 .room-card:nth-child(1) {
     animation-delay: 0.1s;
 }
@@ -643,7 +643,7 @@
     animation-delay: 0.5s;
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
     .hero h1 {
         font-size: 2.5rem;

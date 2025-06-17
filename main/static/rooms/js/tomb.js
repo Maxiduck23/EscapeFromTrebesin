@@ -1,4 +1,4 @@
-// Tomb room specific animations
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const galleryItems = document.querySelectorAll('.gallery-item');
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Keyframes for gallery flash
+
 const style = document.createElement('style');
 style.textContent = `
   @keyframes flash {

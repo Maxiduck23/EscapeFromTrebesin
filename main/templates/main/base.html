@@ -10,26 +10,19 @@
     <link rel="stylesheet" href="{% static 'styles/base.css' %}">
     
     {% block extra_css %}
-    <!-- Page-specific CSS goes here -->
+    
     {% endblock %}
 </head>
 <body>
     <header>
         <nav>
-            <a href="{% url 'main:home' %}" class="logo">
-                <img src="{% static 'img/logo1.svg' %}" alt="Escape from Třebešín logo" />
-                <p>ESCAPE FROM TŘEBEŠÍN</p>
-            </a>
-            
-            <div class="menu-toggle" id="menuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            
-            <ul class="menu" id="menu">
+                <a href="{% url 'main:home' %}" class="logo">
+                    <img src="{% static 'img/logo1.svg' %}" alt="Escape from Třebešín logo" />
+                    <p>ESCAPE FROM TŘEBEŠÍN</p>
+                </a>
+            <ul class="menu">
                 <li><a href="{% url 'main:about' %}">O nás</a></li>
-                <li class="dropdown" id="roomsDropdown">
+                <li class="dropdown">
                     <a href="{% url 'main:details' %}" class="dropdown-toggle">Naše místnosti</a>
                     <ul class="dropdown-menu">
                         <li><a href="{% url 'main:tomb' %}">Egyptská hrobka</a></li>
@@ -49,18 +42,19 @@
     </main>
 
     <footer>
-        <div class="footer-content">
-            <ul class="footer-links">
-                <li><a href="{% url 'main:home' %}">Úvod</a></li>
-                <li><a href="{% url 'main:about' %}">O nás</a></li>
-                <li><a href="{% url 'main:details' %}">Naše místnosti</a></li>
-                <li><a href="{% url 'booking:booking' %}">Rezervace</a></li>
-                <li><a href="{% url 'main:kontact' %}">Kontakt</a></li>
-            </ul>
-            <p class="copyright">© 2025 EscapeFromTrebesin. Všechna práva vyhrazena.</p>
-        </div>
+        <ul class="footer-links">
+            <li><a href="{% url 'main:home' %}">Úvod</a></li>
+            <li><a href="{% url 'main:about' %}">O nás</a></li>
+            <li><a href="{% url 'main:details' %}">Naše místnosti</a></li>
+            <li><a href="{% url 'booking:booking' %}">Rezervace</a></li>
+            <li><a href="{% url 'main:kontact' %}">Kontakt</a></li>
+        </ul>
+        <p class="copyright">© 2025 EscapeFromTrebesin. Všechna práva vyhrazena.</p>
     </footer>
     
+    {% block extra_js %}
+    
+    {% endblock %}
     
     <script src="{% static 'js/base.js' %}"></script>
 </body>

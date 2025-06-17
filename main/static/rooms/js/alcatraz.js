@@ -1,4 +1,4 @@
-// Alcatraz room specific effects
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const detailItems = document.querySelectorAll('.detail-item');

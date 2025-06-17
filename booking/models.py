@@ -135,21 +135,31 @@ class HerciHasRecenze(models.Model):
     recenze = models.ForeignKey(Recenze, on_delete=models.CASCADE)
     created_at = models.DateTimeField(_("Vytvořeno"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Aktualizováno"), auto_now=True)
-class Meta:
-        unique_together = ('herec', 'recenze')
+
+    class Meta:
+        unique_together = ("herec", "recenze")
+        verbose_name = _("Herec v recenzi")
+        verbose_name_plural = _("Herci v recenzích")
 
 class RecenzeHasEscapeRoom(models.Model):
     recenze = models.ForeignKey(Recenze, on_delete=models.CASCADE)
     escape_room = models.ForeignKey(EscapeRoom, on_delete=models.CASCADE)
     created_at = models.DateTimeField(_("Vytvořeno"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Aktualizováno"), auto_now=True)
-class Meta:
-        unique_together = ('recenze', 'escape_room')
+
+    class Meta:
+        unique_together = ("recenze", "escape_room")
+        verbose_name = _("Recenze a místnost")
+        verbose_name_plural = _("Recenze a místnosti")
 
 class HerciHasEscapeRoom(models.Model):
     herec = models.ForeignKey(Herec, on_delete=models.CASCADE)
     escape_room = models.ForeignKey(EscapeRoom, on_delete=models.CASCADE)
     created_at = models.DateTimeField(_("Vytvořeno"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Aktualizováno"), auto_now=True)
-class Meta:
-        unique_together = ('herec', 'escape_room')
+
+    class Meta:
+        unique_together = ("herec", "escape_room")
+        verbose_name = _("Herec a místnost")
+        verbose_name_plural = _("Herci a místnosti")
+

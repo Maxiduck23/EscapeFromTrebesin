@@ -1,6 +1,4 @@
-/* ==========================================================================
-   Base & Global Styles (from base.html)
-   ========================================================================== */
+
 
 * {
     margin: 0;
@@ -14,13 +12,13 @@ body {
     color: #f0f0f0;
 }
 
-/* Links */
+
 a {
     text-decoration: none;
     transition: color 0.3s;
 }
 
-/* Generic Section Padding */
+
 section {
     padding: 60px 20px;
 }
@@ -30,7 +28,7 @@ section {
     margin: 0 auto;
 }
 
-/* Typography */
+
 h1 {
     font-size: 3rem;
     margin-bottom: 20px;
@@ -54,7 +52,7 @@ p {
     line-height: 1.7;
 }
 
-/* Buttons */
+
 .btn {
     display: inline-block;
     background-color: #e63946;
@@ -129,9 +127,7 @@ p {
 }
 
 
-/* ==========================================================================
-   Header & Navigation (from base.html)
-   ========================================================================== */
+
 header {
     background-color: #131313;
     padding: 20px;
@@ -198,7 +194,7 @@ nav {
     color: #e63946;
 }
 
-/* Dropdown Styles */
+
 .dropdown {
     position: relative;
 }
@@ -265,9 +261,7 @@ nav {
 }
 
 
-/* ==========================================================================
-   Page Header (Generic Banner)
-   ========================================================================== */
+
 .page-header {
     background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/api/placeholder/1200/300');
     background-size: cover;
@@ -282,9 +276,7 @@ nav {
     color: #fff;
 }
 
-/* ==========================================================================
-   Footer
-   ========================================================================== */
+
 footer {
     background-color: #0a0a0a;
     padding: 40px 20px;
@@ -319,11 +311,9 @@ footer {
     font-size: 0.9rem;
 }
 
-/* ==========================================================================
-   Home Page Styles (from home.html)
-   ========================================================================== */
 
-/* Hero Section */
+
+
 .hero {
     height: 100vh;
     background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('https://placehold.co/1920x1080/000000/e63946?text=Escape+Room');
@@ -336,7 +326,7 @@ footer {
     position: relative;
     overflow: hidden;
     transform: none;
-    /* Resetting transform for hero */
+    
 }
 
 .hero::before {
@@ -381,7 +371,7 @@ footer {
     flex-wrap: wrap;
 }
 
-/* Stats Section */
+
 .stats-section {
     background: linear-gradient(135deg, #131313 0%, #1a1a1a 100%);
     padding: 80px 20px;
@@ -420,7 +410,7 @@ footer {
     color: #f0f0f0;
 }
 
-/* Home Page Rooms Section */
+
 .rooms-section {
     background: #0a0a0a;
     padding: 100px 20px;
@@ -447,7 +437,7 @@ footer {
 }
 
 .room-card {
-    /* This is a common class, styles will be merged */
+    
     background: linear-gradient(145deg, #131313, #1a1a1a);
     border-radius: 20px;
     overflow: hidden;
@@ -481,7 +471,7 @@ footer {
 }
 
 .room-img {
-    /* from home.html */
+    
     height: 250px;
     background-size: cover;
     background-position: center;
@@ -500,7 +490,7 @@ footer {
 }
 
 .room-content {
-    /* from home.html and details.html - will be merged */
+    
     padding: 30px;
     position: relative;
     z-index: 2;
@@ -552,7 +542,7 @@ footer {
     font-size: 1rem;
     min-height: 90px;
     flex-grow: 1;
-    /* Pushes actions down */
+    
 }
 
 .room-features {
@@ -572,7 +562,7 @@ footer {
 }
 
 
-/* Testimonials */
+
 .testimonials {
     background: #0a0a0a;
     text-align: center;
@@ -619,7 +609,7 @@ footer {
     font-size: 1.2rem;
 }
 
-/* CTA Section */
+
 .cta-section {
     background: linear-gradient(45deg, #e63946, #c1121f);
     padding: 80px 20px;
@@ -638,9 +628,7 @@ footer {
 }
 
 
-/* ==========================================================================
-   About Page Styles (from about.html)
-   ========================================================================== */
+
 .quote-text {
     font-size: 1.3rem;
     font-style: italic;
@@ -836,7 +824,7 @@ footer {
     margin: 40px 0;
 }
 
-/* FAQ Section */
+
 .faq-section {
     background: linear-gradient(180deg, #0a0a0a 0%, #131313 100%);
     padding: 80px 0;
@@ -940,9 +928,7 @@ footer {
 }
 
 
-/* ==========================================================================
-   Room Details Page Styles (from details.html)
-   ========================================================================== */
+
 .rooms-overview {
     background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
     padding: 80px 0;
@@ -973,7 +959,7 @@ footer {
 }
 
 .room-card {
-    /* Styles are merged with home.html .room-card */
+    
     width: 360px;
     cursor: pointer;
     animation: fadeInUp 0.6s ease-out forwards;
@@ -982,7 +968,7 @@ footer {
 }
 
 .room-image {
-    /* from details.html */
+    
     height: 220px;
     background-size: cover;
     background-position: center;
@@ -1084,9 +1070,7 @@ footer {
     gap: 15px;
 }
 
-/* ==========================================================================
-   Individual Room Pages (Tomb, Alcatraz, Lab)
-   ========================================================================== */
+
 .room {
     background-color: #131313;
     border-radius: 15px;
@@ -1154,11 +1138,11 @@ footer {
 }
 
 .room-info .difficulty {
-    /* Specific to room pages */
+    
     display: flex;
     margin-right: 20px;
     flex-direction: row;
-    /* ensure they are horizontal */
+    
 }
 
 .room-info .difficulty span {
@@ -1321,7 +1305,7 @@ footer {
     transform: scale(1.2);
 }
 
-/* Room-specific list icons */
+
 .tomb .features-list li::before {
     content: '🏺';
 }
@@ -1533,7 +1517,7 @@ footer {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
-/* Lab Page Specifics */
+
 .equipment-section {
     background: linear-gradient(135deg, #1c1c1c 0%, #131313 100%);
     padding: 40px;
@@ -1609,9 +1593,7 @@ footer {
     line-height: 1.5;
 }
 
-/* ==========================================================================
-   Contact Page Styles (from kontact.html)
-   ========================================================================== */
+
 .section-container {
     padding: 20px;
     margin-bottom: 80px;
@@ -1770,9 +1752,7 @@ footer {
     justify-content: center;
 }
 
-/* ==========================================================================
-   Booking Page Styles (from booking.html)
-   ========================================================================== */
+
 
 .booking-page {
     background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
@@ -1812,7 +1792,7 @@ footer {
     animation: fadeInUp 0.8s ease-out 0.4s both;
 }
 
-/* Progress Bar */
+
 .booking-progress {
     background: #0a0a0a;
     padding: 30px 40px;
@@ -1991,7 +1971,7 @@ footer {
     gap: 5px;
 }
 
-/* Date Selection */
+
 .date-selection {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -2089,7 +2069,7 @@ footer {
     border: 2px solid #e63946;
 }
 
-/* Time Slots */
+
 .time-slots-container {
     background: rgba(230, 57, 70, 0.05);
     border-radius: 15px;
@@ -2140,7 +2120,7 @@ footer {
     text-decoration: line-through;
 }
 
-/* Personal Information */
+
 .personal-info-form {
     max-width: 600px;
     margin: 0 auto;
@@ -2185,9 +2165,9 @@ footer {
 
 select.form-control {
     background: #1a1a1a;
-    /* Dark background for select */
+    
     color: #f0f0f0;
-    /* Light text for select */
+    
 }
 
 select.form-control option {
@@ -2211,7 +2191,7 @@ select.form-control option {
     font-size: 0.95rem;
 }
 
-/* Summary Section */
+
 .booking-summary {
     background: linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, rgba(19, 19, 19, 0.8) 100%);
     border-radius: 15px;
@@ -2251,7 +2231,7 @@ select.form-control option {
     font-weight: 500;
 }
 
-/* Navigation Buttons */
+
 .booking-navigation {
     display: flex;
     justify-content: space-between;
@@ -2295,7 +2275,7 @@ select.form-control option {
     cursor: not-allowed;
 }
 
-/* Success Message */
+
 .booking-success {
     text-align: center;
     padding: 60px;
@@ -2333,7 +2313,7 @@ select.form-control option {
     margin-bottom: 40px;
 }
 
-/* Loading State */
+
 .loading-overlay {
     position: fixed;
     top: 0;
@@ -2360,9 +2340,7 @@ select.form-control option {
     animation: spin 1s linear infinite;
 }
 
-/* ==========================================================================
-   404 Page Styles
-   ========================================================================== */
+
 .error-page {
     text-align: center;
     padding: 80px 20px;
@@ -2372,9 +2350,7 @@ select.form-control option {
     color: #e63946;
 }
 
-/* ==========================================================================
-   Animations
-   ========================================================================== */
+
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -2512,9 +2488,7 @@ select.form-control option {
     animation: fadeInUp 0.8s ease-out forwards;
 }
 
-/* ==========================================================================
-   Responsive Design
-   ========================================================================== */
+
 @media (max-width: 768px) {
     h1 {
         font-size: 2rem;
@@ -2528,7 +2502,7 @@ select.form-control option {
         padding: 40px 20px;
     }
 
-    /* Navigation */
+    
     .menu {
         flex-direction: column;
         gap: 10px;
@@ -2547,7 +2521,7 @@ select.form-control option {
         margin-top: 10px;
     }
 
-    /* Home Page */
+    
     .hero h1 {
         font-size: 2.5rem;
     }
@@ -2569,7 +2543,7 @@ select.form-control option {
         grid-template-columns: 1fr;
     }
 
-    /* About Page */
+    
     .quote-text {
         font-size: 1.1rem;
         padding: 15px 30px;
@@ -2610,7 +2584,7 @@ select.form-control option {
         right: 15px;
     }
 
-    /* Room Detail Pages */
+    
     .room-title h1 {
         font-size: 2.2rem;
     }
@@ -2661,7 +2635,7 @@ select.form-control option {
         font-size: 1.1rem;
     }
 
-    /* Contact Page */
+    
     .contact-main-grid,
     .contact-grid,
     .branches {
@@ -2669,7 +2643,7 @@ select.form-control option {
         gap: 20px;
     }
 
-    /* Booking Page */
+    
     .booking-content {
         padding: 30px 20px;
     }

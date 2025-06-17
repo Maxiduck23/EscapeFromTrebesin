@@ -27,7 +27,7 @@
         animation: fadeInUp 0.8s ease-out 0.2s both;
     }
 
-    /* Booking Form Container */
+    
     .booking-form-container {
         background: linear-gradient(145deg, #131313, #1a1a1a);
         border-radius: 20px;
@@ -37,7 +37,7 @@
         animation: fadeInUp 0.8s ease-out 0.4s both;
     }
 
-    /* Progress Bar */
+    
     .booking-progress {
         background: #0a0a0a;
         padding: 30px 40px;
@@ -115,13 +115,13 @@
         color: #f0f0f0;
     }
 
-    /* Booking Content */
+    
     .booking-content {
         padding: 50px;
         position: relative;
     }
 
-    /* Step 1: Room Selection */
+    
     .room-selection {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -227,7 +227,7 @@
         gap: 5px;
     }
 
-    /* Step 2: Date Selection */
+    
     .date-selection {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -325,7 +325,7 @@
         border: 2px solid #e63946;
     }
 
-    /* Time Slots */
+    
     .time-slots-container {
         background: rgba(230, 57, 70, 0.05);
         border-radius: 15px;
@@ -376,7 +376,7 @@
         text-decoration: line-through;
     }
 
-    /* Step 3: Personal Information */
+    
     .personal-info-form {
         max-width: 600px;
         margin: 0 auto;
@@ -426,7 +426,7 @@
         color: #777;
     }
 
-    /* Fix select options contrast */
+    
     #players {
         background: #fff;
         color: #000;
@@ -453,7 +453,7 @@
         font-size: 0.95rem;
     }
 
-    /* Summary Section */
+    
     .booking-summary {
         background: linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, rgba(19, 19, 19, 0.8) 100%);
         border-radius: 15px;
@@ -493,7 +493,7 @@
         font-weight: 500;
     }
 
-    /* Navigation Buttons */
+    
     .booking-navigation {
         display: flex;
         justify-content: space-between;
@@ -537,7 +537,7 @@
         cursor: not-allowed;
     }
 
-    /* Success Message */
+    
     .booking-success {
         text-align: center;
         padding: 60px;
@@ -575,7 +575,7 @@
         margin-bottom: 40px;
     }
 
-    /* Animations */
+    
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -598,7 +598,7 @@
         }
     }
 
-    /* Loading State */
+    
     .loading-overlay {
         position: fixed;
         top: 0;
@@ -631,7 +631,7 @@
         }
     }
 
-    /* Responsive Design */
+    
     @media (max-width: 768px) {
         .booking-content {
             padding: 30px 20px;
@@ -666,9 +666,9 @@
         }
     }
 
-    /* OPRAVENÉ CSS PRO KALENDÁŘ - zabránění vícenásobného výběru */
+    
 
-    /* Zajistit, že pouze jeden den může být vybrán současně */
+    
     .calendar-day {
         width: 40px;
         height: 40px;
@@ -685,13 +685,13 @@
         color: #f0f0f0 !important;
     }
 
-    /* Normální stav - bez výběru */
+    
     .calendar-day:not(.disabled):not(.empty):not(.selected) {
         background-color: rgba(255, 255, 255, 0.05) !important;
         color: #f0f0f0 !important;
     }
 
-    /* Hover efekt - pouze pokud není vybraný */
+    
     .calendar-day:not(.disabled):not(.empty):not(.selected):hover {
         background-color: rgba(230, 57, 70, 0.4) !important;
         color: #fff !important;
@@ -699,7 +699,7 @@
         box-shadow: 0 2px 10px rgba(230, 57, 70, 0.3);
     }
 
-    /* VYBRANÝ den - nejvyšší priorita */
+    
     .calendar-day.selected {
         background-color: #e63946 !important;
         color: #fff !important;
@@ -710,7 +710,7 @@
         z-index: 10;
     }
 
-    /* Vybraný den - hover efekt (zůstane vybraný) */
+    
     .calendar-day.selected:hover {
         background-color: #c1121f !important;
         color: #fff !important;
@@ -718,7 +718,7 @@
         transform: scale(1.1) !important;
     }
 
-    /* Dnešní den */
+    
     .calendar-day.today:not(.selected) {
         border-color: #e63946 !important;
         font-weight: bold;
@@ -744,7 +744,7 @@
         background-color: #fff;
     }
 
-    /* Zakázané dny */
+    
     .calendar-day.disabled {
         background-color: rgba(255, 255, 255, 0.02) !important;
         color: #666 !important;
@@ -761,7 +761,7 @@
         box-shadow: none !important;
     }
 
-    /* Prázdné buňky */
+    
     .calendar-day.empty {
         cursor: default !important;
         pointer-events: none !important;
@@ -769,7 +769,7 @@
         color: transparent !important;
     }
 
-    /* OPRAVENÉ TIME SLOT STYLY */
+    
     .time-slot {
         padding: 12px 20px;
         background-color: rgba(255, 255, 255, 0.05) !important;
@@ -783,7 +783,7 @@
         position: relative;
     }
 
-    /* Time slot hover - pouze pokud není vybraný */
+    
     .time-slot:not(.disabled):not(.selected):hover {
         background-color: rgba(230, 57, 70, 0.4) !important;
         color: #fff !important;
@@ -791,7 +791,7 @@
         box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
     }
 
-    /* Vybraný time slot */
+    
     .time-slot.selected {
         background-color: #e63946 !important;
         color: #fff !important;
@@ -807,7 +807,7 @@
         box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.5) !important;
     }
 
-    /* Zakázané time sloty */
+    
     .time-slot.disabled {
         background-color: rgba(255, 255, 255, 0.02) !important;
         color: #666 !important;
@@ -824,17 +824,9 @@
         box-shadow: none !important;
     }
 
-    /* .time-slot.disabled::after {
-        content: 'Obsazeno';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 0.8rem;
-        color: #999;
-    } */
+    
 
-    /* Animace pro výběr */
+    
     @keyframes selectAnimation {
         0% {
             transform: scale(1);
@@ -857,14 +849,14 @@
         animation: selectAnimation 0.3s ease-out;
     }
 
-    /* Focus stavy pro accessibility */
+    
     .calendar-day:focus,
     .time-slot:focus {
         outline: 2px solid #e63946;
         outline-offset: 2px;
     }
 
-    /* Media queries pro responzivitu */
+    
     @media (max-width: 768px) {
         .calendar-day {
             width: 35px;
@@ -878,7 +870,7 @@
         }
     }
 
-    /* Reduced motion pro accessibility */
+    
     @media (prefers-reduced-motion: reduce) {
 
         .calendar-day,
@@ -893,9 +885,7 @@
         }
     }
 
-    /* =========================
-   NOTIFIKAČNÍ SYSTÉM
-   ========================= */
+    
 
     .notification {
         position: fixed;
@@ -946,23 +936,7 @@
         line-height: 1.4;
     }
 
-    /* =========================
-    .notification-close {
-        background: none;
-        border: none;
-        color: #fff;
-        font-size: 1.2rem;
-        cursor: pointer;
-        margin-left: 10px;
-        opacity: 0.8;
-        transition: opacity 0.2s;
-    }
-
-    .notification-close:hover {
-        opacity: 1;
-    }
-   LOADING OVERLAY VYLEPŠENÍ
-   ========================= */
+    
 
     .loading-overlay {
         position: fixed;
@@ -1005,9 +979,7 @@
         }
     }
 
-    /* =========================
-   RESPONSIVNÍ VYLEPŠENÍ
-   ========================= */
+    
 
     @media (max-width: 768px) {
         .calendar-day {
@@ -1037,9 +1009,7 @@
         }
     }
 
-    /* =========================
-   ANIMACE PRO LEPŠÍ UX
-   ========================= */
+    
 
     @keyframes slideInFromRight {
         from {
@@ -1069,9 +1039,7 @@
         animation: fadeInScale 0.4s ease-out;
     }
 
-    /* =========================
-   DEBUG STYLY (odebrat v produkci)
-   ========================= */
+    
 
     .debug-info {
         position: fixed;

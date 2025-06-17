@@ -1,6 +1,6 @@
-  // -----------------------------
-  //  Scroll‐based Fade‐In Animation
-  // -----------------------------
+  
+  
+  
   document.addEventListener('DOMContentLoaded', function() {
     const observerOptions = {
       threshold: 0.1,
@@ -17,7 +17,7 @@
       });
     }, observerOptions);
 
-    // Nastavíme počáteční stav na všechny sekční kontejnery a karty
+    
     document.querySelectorAll('.section-container, .contact-card, .branch-card').forEach(el => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(20px)';

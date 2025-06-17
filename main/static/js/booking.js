@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return cookieValue;
     }
 
-    // DŮLEŽITÁ FUNKCE PRO SPRÁVNÉ FORMÁTOVÁNÍ DATA
+    
     function formatDateLocal(date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return `${year}-${month}-${day}`;
     }
 
-    // Stav rezervace
+    
     let bookingState = {
         currentStep: 1,
         selectedRoom: null,
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
         roomName: ''
     };
 
-    // Elementy
+    
     const steps = document.querySelectorAll('.booking-step');
     const progressSteps = document.querySelectorAll('.progress-step');
     const btnNext = document.getElementById('btn-next');
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const bookingSummary = document.getElementById('booking-summary');
     const loadingOverlay = document.getElementById('loading-overlay');
 
-    // Výběr místnosti
+    
     const roomOptions = document.querySelectorAll('.room-option');
     roomOptions.forEach(option => {
         option.addEventListener('click', function () {
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
             bookingState.roomPrice = parseInt(this.dataset.price);
             bookingState.roomName = this.querySelector('.room-name').textContent;
 
-            // Reset vybraného data a času při změně místnosti
+            
             bookingState.selectedDate = null;
             bookingState.selectedTime = null;
             document.getElementById('summary-date').textContent = '-';
@@ -64,16 +64,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 timeSlotsContainer.innerHTML = '';
             }
 
-            // Aktualizace souhrnu
+            
             document.getElementById('summary-room').textContent = bookingState.roomName;
             document.getElementById('summary-price').textContent = bookingState.roomPrice + ' Kč';
 
-            // Povolit další krok
+            
             btnNext.disabled = false;
         });
     });
 
-    // OPRAVENÁ KALENDÁŘOVÁ LOGIKA
+    
     let currentMonth = new Date();
 
     function generateCalendar() {
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         calendarGrid.innerHTML = '';
 
-        // Přidání labels pro dny v týdnu
+        
         const dayLabels = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
         dayLabels.forEach(day => {
             const label = document.createElement('div');
@@ -107,11 +107,11 @@ document.addEventListener('DOMContentLoaded', function () {
         ];
         calendarTitle.textContent = `${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`;
 
-        // OPRAVENÝ VÝPOČET PRVNÍHO DNE (Po = 0, Út = 1, ..., Ne = 6)
+        
         let startDay = firstDay.getDay();
-        startDay = (startDay === 0) ? 6 : startDay - 1; // Neděle (0) -> 6, ostatní -1
+        startDay = (startDay === 0) ? 6 : startDay - 1; 
 
-        // Prázdné buňky na začátku
+        
         for (let i = 0; i < startDay; i++) {
             const emptyDay = document.createElement('div');
             emptyDay.className = 'calendar-day empty';
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // Generování dnů
+        
         for (let day = 1; day <= lastDay.getDate(); day++) {
             const dayElement = document.createElement('div');
             dayElement.className = 'calendar-day';
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 dayElement.classList.add('disabled');
                 dayElement.title = 'Nelze rezervovat minulé datum';
             } else {
-                // OPRAVA: Použití lokálního formátování místo toISOString()
+                
                 dayElement.dataset.date = formatDateLocal(currentDate);
 
                 dayElement.addEventListener('click', function (e) {
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.querySelectorAll('.calendar-day.selected').forEach(d => d.classList.remove('selected'));
 
                     this.classList.add('selected');
-                    // OPRAVA: Vytvoření Date objektu s lokálním časem
+                    
                     const [year, month, day] = this.dataset.date.split('-');
                     bookingState.selectedDate = new Date(year, month - 1, day);
                     bookingState.selectedTime = null;
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             }
 
-            // Označení dnešního dne
+            
             if (currentDate.toDateString() === today.toDateString()) {
                 dayElement.classList.add('today');
             }
@@ -184,13 +184,13 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('Kalendář vygenerován');
     }
 
-    // Navigation kalendáře
+    
     document.getElementById('prev-month').addEventListener('click', function () {
         console.log('Předchozí měsíc');
         currentMonth.setMonth(currentMonth.getMonth() - 1);
         generateCalendar();
 
-        // Reset výběru při změně měsíce
+        
         bookingState.selectedDate = null;
         bookingState.selectedTime = null;
         document.getElementById('summary-date').textContent = '-';
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
         currentMonth.setMonth(currentMonth.getMonth() + 1);
         generateCalendar();
 
-        // Reset výběru při změně měsíce
+        
         bookingState.selectedDate = null;
         bookingState.selectedTime = null;
         document.getElementById('summary-date').textContent = '-';
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
         checkStep2Completion();
     });
 
-    // OPRAVENÁ FUNKCE PRO NAČTENÍ DOSTUPNÝCH ČASŮ
+    
     function updateTimeSlots() {
         if (!bookingState.selectedRoom || !bookingState.selectedDate) {
             console.log('Chybí místnost nebo datum pro načtení časů');
@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         timeSlotsContainer.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">Načítání volných termínů...</p>';
 
-        // OPRAVA: Použití lokálního formátování
+        
         const dateStr = formatDateLocal(bookingState.selectedDate);
 
         if (!window.bookingUrls || !window.bookingUrls.getAvailableSlots) {
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-    // Kontrola dokončení kroku 2
+    
     function checkStep2Completion() {
         if (bookingState.selectedDate && bookingState.selectedTime) {
             btnNext.disabled = false;
@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Validace formuláře
+    
     const personalInfoForm = document.getElementById('personal-info-form');
     const formInputs = personalInfoForm.querySelectorAll('input[required], select[required]');
 
@@ -320,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // OPRAVENÉ ODESÍLÁNÍ FORMULÁŘE
+    
     btnNext.addEventListener('click', function () {
         if (bookingState.currentStep === 3) {
             console.log('Odesílám rezervaci...');
@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const formData = new FormData();
             formData.append('room', bookingState.selectedRoom);
-            // OPRAVA: Použití lokálního formátování místo toISOString()
+            
             formData.append('date', formatDateLocal(bookingState.selectedDate));
             formData.append('time', bookingState.selectedTime);
             formData.append('jmeno', bookingState.personalInfo.firstName);
@@ -383,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function () {
             btnNext.disabled = true;
             const submitUrl = window.bookingUrls?.bookingSubmit || '/booking/';
 
-            // Debug log pro kontrolu
+            
             console.log('Odesílám data:', {
                 room: bookingState.selectedRoom,
                 date: formatDateLocal(bookingState.selectedDate),
@@ -439,7 +439,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // FUNKCE PRO ZOBRAZENÍ ZPRÁV
+    
     function showSuccessMessage(message) {
         const notification = document.createElement('div');
         notification.className = 'notification success';
@@ -492,7 +492,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 8000);
     }
 
-    // Navigace mezi kroky
+    
     function goToStep(stepNumber) {
         console.log('Přechod na krok:', stepNumber);
 
@@ -544,10 +544,10 @@ document.addEventListener('DOMContentLoaded', function () {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // Inicializace kalendáře
+    
     console.log('Inicializuji kalendář...');
     generateCalendar();
 
-    // Expose booking state for debugging
+    
     window.bookingState = bookingState;
 });
