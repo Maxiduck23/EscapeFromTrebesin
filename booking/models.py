@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-# Model pro Správce
+                   
 class Spravce(models.Model):
     id_spravce = models.AutoField(primary_key=True)
     jmeno = models.CharField("Jméno", max_length=45)
@@ -19,7 +19,7 @@ class Spravce(models.Model):
         verbose_name = _("Správce")
         verbose_name_plural = _("Správci")
 
-# Model pro Lokace
+                  
 class Lokace(models.Model):
     id_lokace = models.AutoField(primary_key=True)
     nazev = models.CharField(_("Název lokace"), max_length=45, unique=True)
@@ -36,7 +36,7 @@ class Lokace(models.Model):
         verbose_name = _("Lokace")
         verbose_name_plural = _("Lokace")
 
-# Model pro Herci
+                 
 class Herec(models.Model):
     id_herec = models.AutoField(primary_key=True)
     jmeno = models.CharField(_("Jméno"), max_length=45)
@@ -52,7 +52,7 @@ class Herec(models.Model):
         verbose_name = _("Herec")
         verbose_name_plural = _("Herci")
 
-# Model pro Únikové místnosti (Escape Rooms)
+                                            
 class EscapeRoom(models.Model):
     id_escape_room = models.AutoField(primary_key=True)
     nazev = models.CharField(_("Název místnosti"), max_length=100)
@@ -73,7 +73,7 @@ class EscapeRoom(models.Model):
         verbose_name = _("Úniková místnost")
         verbose_name_plural = _("Únikové místnosti")
 
-# Model pro Zákazníky
+                     
 class Zakaznik(models.Model):
     id_zakaznik = models.AutoField(primary_key=True)
     jmeno = models.CharField(_("Jméno"), max_length=45)
@@ -90,7 +90,7 @@ class Zakaznik(models.Model):
         verbose_name = _("Zákazník")
         verbose_name_plural = _("Zákazníci")
 
-# Model pro Rezervace
+                     
 class Rezervace(models.Model):
     id_rezervace = models.AutoField(primary_key=True)
     datum_rezervace = models.DateField(_("Datum rezervace"))
@@ -108,10 +108,10 @@ class Rezervace(models.Model):
     class Meta:
         verbose_name = _("Rezervace")
         verbose_name_plural = _("Rezervace")
-        # Zajišťuje, že jedna místnost nemůže být rezervována ve stejný den a čas
+                                                                                 
         unique_together = ('datum_rezervace', 'cas_rezervace', 'escape_room')
 
-# Model pro Recenze
+                   
 class Recenze(models.Model):
     id_recenze = models.AutoField(primary_key=True)
     datum = models.DateField(_("Datum"), default=timezone.now)
@@ -129,7 +129,7 @@ class Recenze(models.Model):
         verbose_name = _("Recenze")
         verbose_name_plural = _("Recenze")
 
-# Spojovací tabulky pro vztahy Many-to-Many
+                                           
 class HerciHasRecenze(models.Model):
     herec = models.ForeignKey(Herec, on_delete=models.CASCADE)
     recenze = models.ForeignKey(Recenze, on_delete=models.CASCADE)

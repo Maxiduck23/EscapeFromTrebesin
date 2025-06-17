@@ -14,7 +14,7 @@ from .models import (
 
 
 class RezervaceTests(TestCase):
-    """Tests for reservation bookings and available dates."""
+                                                             
 
     @classmethod
     def setUpTestData(cls):
