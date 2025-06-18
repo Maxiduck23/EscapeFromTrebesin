@@ -1,3 +1,4 @@
+/* Základní reset a typography */
 * {
     margin: 0;
     padding: 0;
@@ -10,18 +11,19 @@ body {
     color: #f0f0f0;
 }
 
-
 a {
     text-decoration: none;
     transition: color 0.3s;
 }
 
-
+/* Header a navigace */
 header {
     background-color: #131313;
-    padding: 20px;
+    padding: 15px 20px;
     border-bottom: 2px solid #e63946;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
+
 .hidden {
     visibility: hidden;
 }
@@ -30,12 +32,15 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
+/* Logo */
 .logo {
     display: flex;
     align-items: center;
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: bold;
     color: #e63946;
     cursor: pointer;
@@ -43,12 +48,12 @@ nav {
 }
 
 .logo:hover {
-    transform: translateY(-5px) scale(1.02);
+    transform: translateY(-2px) scale(1.02);
 }
 
 .logo img {
-    height: 2.5rem;
-    margin-right: 10px;
+    height: 2rem;
+    margin-right: 8px;
     transition: transform 0.3s ease;
 }
 
@@ -56,33 +61,43 @@ nav {
     transform: scale(1.1);
 }
 
+.logo p {
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+}
+
+/* Menu */
 .menu {
     display: flex;
     list-style: none;
     position: relative;
+    gap: 15px;
 }
 
 .menu li {
-    margin-left: 20px;
     position: relative;
-    list-style: none; 
+    list-style: none;
 }
 
 .menu a {
     color: #f0f0f0;
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.3s;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    padding: 10px 0;
+    padding: 8px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
 }
 
 .menu a:hover {
     color: #e63946;
+    background-color: rgba(230, 57, 70, 0.1);
 }
 
-
+/* Dropdown */
 .dropdown {
     position: relative;
 }
@@ -94,8 +109,8 @@ nav {
 
 .dropdown-toggle::after {
     content: "▼";
-    margin-left: 8px;
-    font-size: 0.8rem;
+    margin-left: 5px;
+    font-size: 0.7rem;
     transition: transform 0.3s ease;
 }
 
@@ -106,51 +121,60 @@ nav {
 .dropdown-menu {
     position: absolute;
     top: 100%;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
     background-color: #1a1a1a;
     border: 1px solid #333;
-    border-radius: 5px;
-    min-width: 200px;
+    border-radius: 6px;
+    width: 100px;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px);
     transition: all 0.3s ease;
     z-index: 1000;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    list-style: none; 
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    list-style: none;
+    backdrop-filter: blur(10px);
 }
 
 .dropdown.active .dropdown-menu {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
 }
 
 .dropdown-menu li {
     margin: 0;
-    list-style: none; 
+    list-style: none;
 }
 
 .dropdown-menu a {
     display: block;
-    padding: 12px 16px;
+    padding: 10px 15px;
     color: #f0f0f0;
-    border-bottom: 1px solid #333;
-    transition: background-color 0.3s, color 0.3s;
+    border-bottom: 1px solid rgba(51, 51, 51, 0.5);
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    border-radius: 0;
+}
+
+.dropdown-menu li:first-child a {
+    border-radius: 6px 6px 0 0;
 }
 
 .dropdown-menu li:last-child a {
     border-bottom: none;
+    border-radius: 0 0 6px 6px;
 }
 
 .dropdown-menu a:hover {
     background-color: #e63946;
     color: #fff;
+    transform: translateX(2px);
 }
 
-
+/* Ostatní sekce */
 .page-header {
-    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/api/placeholder/1200/300');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/api/placeholder/1200/300');
     background-size: cover;
     background-position: center;
     padding: 60px 20px;
@@ -163,7 +187,6 @@ nav {
     color: #fff;
 }
 
-
 section {
     padding: 60px 20px;
 }
@@ -172,7 +195,6 @@ section {
     max-width: 1200px;
     margin: 0 auto;
 }
-
 
 h1 {
     font-size: 3rem;
@@ -197,7 +219,6 @@ p {
     line-height: 1.7;
 }
 
-
 .btn {
     display: inline-block;
     background-color: #e63946;
@@ -217,7 +238,7 @@ p {
     background-color: #c1121f;
 }
 
-
+/* Footer */
 footer {
     background-color: #0a0a0a;
     padding: 40px 20px;
@@ -230,17 +251,19 @@ footer {
     justify-content: center;
     list-style: none;
     margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .footer-links li {
-    margin: 0 15px;
-    list-style: none; 
+    list-style: none;
 }
 
 .footer-links a {
     color: #f0f0f0;
     text-decoration: none;
     transition: color 0.3s;
+    font-size: 0.9rem;
 }
 
 .footer-links a:hover {
@@ -252,17 +275,52 @@ footer {
     font-size: 0.9rem;
 }
 
+/* Responsive design */
+@media (max-width: 1024px) {
+    nav {
+        padding: 0 10px;
+    }
 
-@media (max-width: 768px) {
+    .logo p {
+        font-size: 1.1rem;
+    }
+
     .menu {
-        flex-direction: column;
         gap: 10px;
     }
-    
-    .menu li {
-        margin-left: 0;
+
+    .menu a {
+        padding: 6px 10px;
+        font-size: 0.9rem;
     }
-    
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 10px 15px;
+    }
+
+    nav {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .menu {
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .menu li {
+        width: 100%;
+    }
+
+    .menu a {
+        justify-content: center;
+        padding: 10px;
+    }
+
     .dropdown-menu {
         position: static;
         transform: none;
@@ -270,17 +328,27 @@ footer {
         border: none;
         background-color: #0a0a0a;
         margin-top: 10px;
+        min-width: 100%;
     }
-    
+
+    .dropdown.active .dropdown-menu {
+        transform: none;
+    }
+
     h1 {
         font-size: 2rem;
     }
-    
+
     h2 {
         font-size: 1.8rem;
     }
-    
+
     .page-header {
         padding: 40px 20px;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        gap: 10px;
     }
 }
